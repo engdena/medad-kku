@@ -16,11 +16,11 @@ export const student = {
 };
 
 export const courses = [
-  { code: "CS401", name: "Machine Learning", grade: "B+", performance: 84, trend: "up", risk: "low" },
-  { code: "CS402", name: "Distributed Systems", grade: "C", performance: 68, trend: "down", risk: "high" },
-  { code: "CS411", name: "Data Engineering", grade: "B", performance: 78, trend: "flat", risk: "medium" },
-  { code: "MATH320", name: "Linear Algebra II", grade: "A-", performance: 91, trend: "up", risk: "low" },
-  { code: "ENG250", name: "Technical Writing", grade: "B-", performance: 73, trend: "down", risk: "medium" },
+  { code: "CS401", name: "Machine Learning", nameAr: "تعلّم الآلة", grade: "B+", performance: 84, trend: "up", risk: "low" },
+  { code: "CS402", name: "Distributed Systems", nameAr: "النظم الموزعة", grade: "C", performance: 68, trend: "down", risk: "high" },
+  { code: "CS411", name: "Data Engineering", nameAr: "هندسة البيانات", grade: "B", performance: 78, trend: "flat", risk: "medium" },
+  { code: "MATH320", name: "Linear Algebra II", nameAr: "الجبر الخطي 2", grade: "A-", performance: 91, trend: "up", risk: "low" },
+  { code: "ENG250", name: "Technical Writing", nameAr: "الكتابة التقنية", grade: "B-", performance: 73, trend: "down", risk: "medium" },
 ];
 
 export const recommendedSkills = [
