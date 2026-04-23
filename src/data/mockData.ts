@@ -1,0 +1,121 @@
+export const student = {
+  id: "S-44218",
+  name: "Faisal Al-Qahtani",
+  arabicName: "فيصل القحطاني",
+  major: "Computer Science",
+  college: "College of Computer Science",
+  level: "Level 7 of 8",
+  gpa: 3.42,
+  gpaScale: 5.0,
+  attendance: 91,
+  riskScore: 38, // 0-100, lower = safer
+  riskBand: "Moderate",
+  trend: [3.1, 3.25, 3.18, 3.3, 3.42, 3.42],
+  semesters: ["S1", "S2", "S3", "S4", "S5", "S6"],
+  avatar: "FQ",
+};
+
+export const courses = [
+  { code: "CS401", name: "Machine Learning", grade: "B+", performance: 84, trend: "up", risk: "low" },
+  { code: "CS402", name: "Distributed Systems", grade: "C", performance: 68, trend: "down", risk: "high" },
+  { code: "CS411", name: "Data Engineering", grade: "B", performance: 78, trend: "flat", risk: "medium" },
+  { code: "MATH320", name: "Linear Algebra II", grade: "A-", performance: 91, trend: "up", risk: "low" },
+  { code: "ENG250", name: "Technical Writing", grade: "B-", performance: 73, trend: "down", risk: "medium" },
+];
+
+export const recommendedSkills = [
+  {
+    title: "Generative AI Engineering",
+    provider: "Doroob × KKU",
+    duration: "6 weeks",
+    demand: 96,
+    salary: "18,500 SAR",
+    match: 94,
+    tags: ["Vision 2030", "AI", "High demand"],
+    reason: "Bridges your ML strength with the #1 emerging skill in Riyadh & Jeddah.",
+  },
+  {
+    title: "Cloud Architecture (AWS / Azure)",
+    provider: "SDAIA Academy",
+    duration: "8 weeks",
+    demand: 88,
+    salary: "16,200 SAR",
+    match: 87,
+    tags: ["Cloud", "Saudi Labor Market"],
+    reason: "Closes the Distributed Systems gap and matches NEOM hiring trends.",
+  },
+  {
+    title: "Cybersecurity Fundamentals",
+    provider: "NCA × Tuwaiq",
+    duration: "5 weeks",
+    demand: 82,
+    salary: "15,000 SAR",
+    match: 76,
+    tags: ["Security", "Vision 2030"],
+    reason: "Strategic for the Kingdom's digital transformation programs.",
+  },
+  {
+    title: "Arabic NLP & LLM Fine-tuning",
+    provider: "KKU Research Lab",
+    duration: "4 weeks",
+    demand: 79,
+    salary: "17,000 SAR",
+    match: 89,
+    tags: ["Research", "Arabic AI"],
+    reason: "Aligns with your graduation project domain.",
+  },
+];
+
+export const industryProjects = [
+  {
+    company: "Aramco Digital",
+    sector: "Energy / AI",
+    title: "Predictive maintenance for refinery sensors",
+    budget: "Sponsored",
+    location: "Dhahran",
+    skills: ["Python", "Time-series", "ML"],
+    deadline: "May 2025",
+    match: 92,
+    seats: 3,
+  },
+  {
+    company: "STC Solutions",
+    sector: "Telecom",
+    title: "Arabic chatbot for customer onboarding",
+    budget: "12,000 SAR",
+    location: "Riyadh / Remote",
+    skills: ["NLP", "React", "LLM"],
+    deadline: "Apr 2025",
+    match: 88,
+    seats: 2,
+  },
+  {
+    company: "NEOM Tech",
+    sector: "Smart Cities",
+    title: "Edge-AI traffic flow optimization",
+    budget: "Sponsored + Internship",
+    location: "NEOM",
+    skills: ["Computer Vision", "IoT"],
+    deadline: "Jun 2025",
+    match: 81,
+    seats: 4,
+  },
+  {
+    company: "Ministry of Health",
+    sector: "HealthTech",
+    title: "Risk-stratification dashboard for clinics",
+    budget: "Sponsored",
+    location: "Abha / Riyadh",
+    skills: ["Data viz", "React", "Stats"],
+    deadline: "May 2025",
+    match: 84,
+    seats: 2,
+  },
+];
+
+export const insights = [
+  { label: "Predicted final GPA", value: "3.58", trend: "+0.16", positive: true },
+  { label: "Employability score", value: "78%", trend: "+12%", positive: true },
+  { label: "Skill-market gap", value: "2 skills", trend: "−1", positive: true },
+  { label: "Peer percentile", value: "Top 22%", trend: "+5%", positive: true },
+];
