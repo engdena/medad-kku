@@ -65,6 +65,7 @@ export default {
       fontFamily: {
         display: ["'Plus Jakarta Sans'", "Inter", "system-ui", "sans-serif"],
         sans: ["Inter", "system-ui", "sans-serif"],
+        arabic: ["'IBM Plex Sans Arabic'", "'Plus Jakarta Sans'", "system-ui", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
