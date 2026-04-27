@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useI18n } from "@/i18n/I18nContext";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export const SkillRoadmap = () => {
   const { t, lang } = useI18n();
@@ -24,9 +25,11 @@ export const SkillRoadmap = () => {
           <h2 className="font-display font-bold text-2xl md:text-3xl mt-1">{t.skills.title}</h2>
           <p className="text-muted-foreground text-sm md:text-base max-w-2xl mt-1">{t.skills.sub}</p>
         </div>
-        <Button variant="outline" className="rounded-2xl gap-2">
-          {t.skills.full} <ArrowRight className={`w-4 h-4 ${lang === "ar" ? "flip-rtl" : ""}`} />
-        </Button>
+        <Link to="/roadmap">
+          <Button variant="outline" className="rounded-2xl gap-2">
+            {t.skills.full} <ArrowRight className={`w-4 h-4 ${lang === "ar" ? "flip-rtl" : ""}`} />
+          </Button>
+        </Link>
       </motion.div>
 
       <div className="grid md:grid-cols-2 gap-4">
