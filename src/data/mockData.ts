@@ -13,15 +13,80 @@ export const student = {
   trend: [3.1, 3.25, 3.18, 3.3, 3.42, 3.42],
   semesters: ["S1", "S2", "S3", "S4", "S5", "S6"],
   avatar: "FQ",
+  profileSlug: "faisal-al-qahtani",
 };
+
+export const gradeScale = ["A+", "A", "B+", "B", "C+", "C", "D+", "D", "F"] as const;
 
 export const courses = [
   { code: "CS401", name: "Machine Learning", nameAr: "تعلّم الآلة", grade: "B+", performance: 84, trend: "up", risk: "low" },
   { code: "CS402", name: "Distributed Systems", nameAr: "النظم الموزعة", grade: "C", performance: 68, trend: "down", risk: "high" },
   { code: "CS411", name: "Data Engineering", nameAr: "هندسة البيانات", grade: "B", performance: 78, trend: "flat", risk: "medium" },
-  { code: "MATH320", name: "Linear Algebra II", nameAr: "الجبر الخطي 2", grade: "A-", performance: 91, trend: "up", risk: "low" },
-  { code: "ENG250", name: "Technical Writing", nameAr: "الكتابة التقنية", grade: "B-", performance: 73, trend: "down", risk: "medium" },
+  { code: "MATH320", name: "Linear Algebra II", nameAr: "الجبر الخطي 2", grade: "A", performance: 91, trend: "up", risk: "low" },
+  { code: "ENG250", name: "Technical Writing", nameAr: "الكتابة التقنية", grade: "C+", performance: 73, trend: "down", risk: "medium" },
 ];
+
+export type ActivityCategory = "research" | "leadership" | "volunteering";
+
+export type StudentActivity = {
+  id: string;
+  title: string;
+  titleAr: string;
+  category: ActivityCategory;
+  date: string;
+  description: string;
+  descriptionAr: string;
+  evidence: string;
+};
+
+export const activityCategoryPoints: Record<ActivityCategory, number> = {
+  research: 15,
+  leadership: 10,
+  volunteering: 5,
+};
+
+export const annualDistinctionTarget = 100;
+
+export const defaultActivities: StudentActivity[] = [
+  {
+    id: "act-1",
+    title: "Published Arabic NLP research poster",
+    titleAr: "ملصق بحثي منشور في معالجة اللغة العربية",
+    category: "research",
+    date: "2025-02-18",
+    description: "Presented a research poster on fine-tuning Arabic language models for student services.",
+    descriptionAr: "قدّم ملصقاً بحثياً عن ضبط النماذج اللغوية العربية لخدمات الطلاب.",
+    evidence: "https://example.com/research-poster",
+  },
+  {
+    id: "act-2",
+    title: "AI Club technical lead",
+    titleAr: "قائد تقني في نادي الذكاء الاصطناعي",
+    category: "leadership",
+    date: "2025-01-10",
+    description: "Led weekly bootcamp sessions for applied machine learning projects.",
+    descriptionAr: "قاد جلسات معسكر أسبوعية لمشاريع تعلم الآلة التطبيقية.",
+    evidence: "https://example.com/ai-club",
+  },
+  {
+    id: "act-3",
+    title: "Community data-skills workshop",
+    titleAr: "ورشة مجتمعية لمهارات البيانات",
+    category: "volunteering",
+    date: "2024-12-04",
+    description: "Delivered a short workshop introducing data visualization to high-school students.",
+    descriptionAr: "قدّم ورشة قصيرة لتعريف طلاب المرحلة الثانوية بتصور البيانات.",
+    evidence: "https://example.com/workshop",
+  },
+];
+
+export const calculateDistinction = (activities: Pick<StudentActivity, "category">[]) => {
+  const points = activities.reduce((sum, activity) => sum + activityCategoryPoints[activity.category], 0);
+  return {
+    points,
+    percentage: Math.min(100, Math.round((points / annualDistinctionTarget) * 100)),
+  };
+};
 
 export const recommendedSkills = [
   {

@@ -8,7 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Nebras — KKU Strategic Intellect palette */
+    /* Medad — KKU Strategic Professional palette */
     --background: 150 30% 98%;
     --foreground: 155 40% 10%;
 
@@ -193,7 +193,7 @@ html.font-arabic body {
 }
 html.font-arabic .font-display {
   font-family: 'IBM Plex Sans Arabic', 'Plus Jakarta Sans', system-ui, sans-serif;
-  letter-spacing: -0.005em;
+  letter-spacing: 0;
 }
 
 /* Glassmorphism utilities */
