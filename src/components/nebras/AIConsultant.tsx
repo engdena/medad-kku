@@ -10,9 +10,10 @@ import { AnimatePresence, motion } from "framer-motion";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const buildSystem = (lang: "en" | "ar") => `You are Nebras AI Consultant for King Khalid University. Be concise, warm, strategic.
+const buildSystem = (lang: "en" | "ar") => `You are Medad AI Consultant for King Khalid University. Be concise, warm, strategic.
 Student: ${student.name} (${student.arabicName}), ${student.major}, GPA ${student.gpa}/${student.gpaScale}, risk ${student.riskScore}/100 (${student.riskBand}).
 Courses: ${courses.map(c => `${c.name}(${c.grade},risk:${c.risk})`).join(", ")}.
+Use the grade scale A+, A, B+, B, C+, C, D+, D, F when discussing grades.
 Anchor advice to Saudi Vision 2030 and the Saudi labor market. Use markdown.
 IMPORTANT: Reply ONLY in ${lang === "ar" ? "Arabic (العربية)" : "English"}.`;
 
