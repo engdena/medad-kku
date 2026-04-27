@@ -29,11 +29,11 @@ const Index = () => {
 
         <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-10 space-y-10 md:space-y-14">
           <HeroDashboard />
-          <CoursesTable />
-          <div className="grid lg:grid-cols-[1fr_390px] gap-4 items-start">
-            <ActivityPortfolio activities={activities} setActivities={setActivities} />
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_390px] gap-4 items-start">
             <DistinctionGauge activities={activities} />
+            <ActivityPortfolio activities={activities} setActivities={setActivities} />
           </div>
+          <CoursesTable />
           <SkillRoadmap />
           <CareerMarketplace />
 
