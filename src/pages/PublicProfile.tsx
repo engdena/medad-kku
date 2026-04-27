@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { courses, student, calculateDistinction, activityCategoryPoints } from "@/data/mockData";
 import { useStudentActivities } from "@/hooks/useStudentActivities";
 import { useI18n } from "@/i18n/I18nContext";
-import { ArrowLeft, Award, BriefcaseBusiness, GraduationCap, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Award, BriefcaseBusiness, ExternalLink, GraduationCap, ShieldCheck } from "lucide-react";
 import { PolarAngleAxis, RadialBar, RadialBarChart, ResponsiveContainer } from "recharts";
 
 const levelKey = (percentage: number) => percentage <= 30 ? "initiator" : percentage <= 70 ? "distinguished" : "leader";
@@ -87,6 +87,11 @@ export const PublicProfile = () => {
                   </div>
                   <div className="font-semibold mt-1">{lang === "ar" ? activity.titleAr : activity.title}</div>
                   <p className="text-sm text-muted-foreground mt-1">{lang === "ar" ? activity.descriptionAr : activity.description}</p>
+                  {activity.evidence && (
+                    <a href={activity.evidence} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline">
+                      <ExternalLink className="w-3 h-3" /> {t.portfolio.evidenceShort}
+                    </a>
+                  )}
                 </div>
               ))}
             </div>
