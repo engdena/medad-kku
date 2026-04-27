@@ -1,4 +1,4 @@
-import { courses } from "@/data/mockData";
+import { courses, gradeScale } from "@/data/mockData";
 import { ArrowUpRight, ArrowDownRight, Minus, Volume2, BarChart3 } from "lucide-react";
 import { useAccessibility } from "@/contexts/AccessibilityContext";
 import { useI18n } from "@/i18n/I18nContext";
@@ -37,6 +37,14 @@ export const CoursesTable = () => {
         <div>
           <h2 className="font-display font-bold text-xl">{t.courses.title}</h2>
           <p className="text-sm text-muted-foreground">{t.courses.sub}</p>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">
+            <span>{t.courses.scale}</span>
+            {gradeScale.map((grade) => (
+              <span key={grade} className="rounded-full bg-secondary px-2 py-0.5 font-bold text-secondary-foreground">
+                {grade}
+              </span>
+            ))}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {ttsEnabled && (
