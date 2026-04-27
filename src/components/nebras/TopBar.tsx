@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { AccessibilityPanel } from "./AccessibilityPanel";
 import { useI18n } from "@/i18n/I18nContext";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export const TopBar = ({ onOpenAI }: { onOpenAI: () => void }) => {
   const [dark, setDark] = useState(false);
@@ -54,6 +55,11 @@ export const TopBar = ({ onOpenAI }: { onOpenAI: () => void }) => {
             <Languages className="w-4 h-4" />
             <span className="text-xs">{t.nav.language}</span>
           </Button>
+          <Link to="/profile/faisal-al-qahtani" className="hidden lg:inline-flex">
+            <Button variant="outline" size="sm" className="rounded-xl font-semibold">
+              {t.nav.publicProfile}
+            </Button>
+          </Link>
           <Button variant="ghost" size="icon" className="rounded-xl" onClick={() => setA11yOpen(true)} aria-label={t.nav.accessibility}>
             <Accessibility className="w-5 h-5" />
           </Button>
