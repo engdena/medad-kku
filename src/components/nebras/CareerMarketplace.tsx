@@ -49,15 +49,15 @@ export const CareerMarketplace = () => {
               </div>
 
               <div className="px-5 pb-5 -mt-7">
-                <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-4 min-w-0">
                   <div className="w-14 h-14 rounded-2xl bg-card border-4 border-card text-primary grid place-items-center shrink-0 shadow-soft">
                     <Building2 className="w-7 h-7" />
                   </div>
-                  <div className="flex-1 pt-1">
+                  <div className="flex-1 pt-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 flex-wrap">
-                      <div>
-                        <div className="font-semibold text-sm">{company}</div>
-                        <div className="text-xs text-muted-foreground">{sector} · {location}</div>
+                      <div className="min-w-0">
+                        <div className="font-bold text-base text-foreground leading-snug break-words">{company}</div>
+                        <div className="text-xs font-medium text-muted-foreground break-words">{sector} · {location}</div>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-success/15 text-success font-bold ring-1 ring-success/30">
@@ -69,7 +69,7 @@ export const CareerMarketplace = () => {
                       </div>
                     </div>
 
-                    <h3 className="font-display font-bold text-lg leading-tight mt-3">{title}</h3>
+                    <h3 className="font-display font-bold text-lg leading-tight mt-3 break-words">{title}</h3>
 
                     <div className="flex flex-wrap gap-1.5 mt-3">
                       {p.skills.map((s) => (
@@ -79,7 +79,7 @@ export const CareerMarketplace = () => {
                       ))}
                     </div>
 
-                    <div className="flex items-center gap-4 mt-4 text-xs text-muted-foreground">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-xs font-medium text-muted-foreground">
                       <Meta icon={<MapPin className="w-3.5 h-3.5" />} label={location} />
                       <Meta icon={<Calendar className="w-3.5 h-3.5" />} label={deadline} />
                       <Meta icon={<Users className="w-3.5 h-3.5" />} label={t.career.seats(p.seats)} />
@@ -90,7 +90,7 @@ export const CareerMarketplace = () => {
                         <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{t.career.match}</div>
                         <div className="font-display font-bold text-xl text-gradient leading-none">{p.match}%</div>
                       </div>
-                      <div className="text-right">
+                      <div className={lang === "ar" ? "text-left" : "text-right"}>
                         <div className="text-xs font-semibold mb-1">{budget}</div>
                         <Button size="sm" className="rounded-2xl bg-gradient-primary text-primary-foreground hover:opacity-95 shadow-soft">
                           {t.career.apply}
