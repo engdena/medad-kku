@@ -63,8 +63,8 @@ export const CoursesTable = () => {
       {/* Recharts: Academic Risk Levels */}
       <div className="px-3 md:px-5 pt-4 h-56">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} margin={{ top: 8, right: 16, left: -10, bottom: 0 }}>
-            <XAxis dataKey="name" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+            <BarChart data={chartData} margin={{ top: 8, right: 16, left: -10, bottom: 18 }}>
+            <XAxis dataKey="name" interval={0} height={44} tick={{ fontSize: 11, fontWeight: 700, fill: "hsl(var(--foreground))" }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} domain={[0, 100]} />
             <Tooltip
               cursor={{ fill: "hsl(var(--muted) / 0.4)" }}
@@ -101,8 +101,8 @@ export const CoursesTable = () => {
               className="grid grid-cols-12 items-center gap-3 px-5 md:px-6 py-3.5 hover:bg-secondary/40 transition-colors"
             >
               <div className="col-span-6 md:col-span-5">
-                <div className="font-semibold">{lang === "ar" ? c.nameAr : c.name}</div>
-                <div className="text-xs text-muted-foreground">{c.code}</div>
+                <div className="font-bold text-foreground leading-snug break-words">{lang === "ar" ? c.nameAr : c.name}</div>
+                <div className="text-xs font-semibold text-primary">{c.code}</div>
               </div>
               <div className="col-span-2 font-display font-bold text-lg">{c.grade}</div>
               <div className="col-span-3 md:col-span-3">
