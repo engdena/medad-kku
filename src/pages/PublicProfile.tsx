@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { courses, student, calculateDistinction, activityCategoryPoints } from "@/data/mockData";
 import { useStudentActivities } from "@/hooks/useStudentActivities";
@@ -96,7 +97,7 @@ export const PublicProfile = () => {
   );
 };
 
-const Metric = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) => (
+const Metric = ({ icon, label, value }: { icon: ReactNode; label: string; value: string }) => (
   <div className="rounded-2xl bg-secondary/60 p-3">
     <div className="flex items-center gap-2 text-xs text-muted-foreground">{icon}{label}</div>
     <div className="font-display font-bold text-2xl mt-1">{value}</div>
