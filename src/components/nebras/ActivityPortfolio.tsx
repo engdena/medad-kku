@@ -53,7 +53,7 @@ export const ActivityPortfolio = ({
   };
 
   return (
-    <section className="grid lg:grid-cols-[0.85fr_1.15fr] gap-4 items-start">
+    <section className="grid xl:grid-cols-[0.85fr_1.15fr] gap-4 items-start">
       <motion.form
         onSubmit={submit}
         initial={{ opacity: 0, y: 18 }}
