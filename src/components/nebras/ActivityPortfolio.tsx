@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, type Dispatch, type SetStateAction } from "react";
 import { activityCategoryPoints, type ActivityCategory, type StudentActivity } from "@/data/mockData";
 import { useI18n } from "@/i18n/I18nContext";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ export const ActivityPortfolio = ({
   setActivities,
 }: {
   activities: StudentActivity[];
-  setActivities: React.Dispatch<React.SetStateAction<StudentActivity[]>>;
+  setActivities: Dispatch<SetStateAction<StudentActivity[]>>;
 }) => {
   const { t, lang } = useI18n();
   const [draft, setDraft] = useState<Draft>(emptyDraft);
