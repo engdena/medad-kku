@@ -39,18 +39,10 @@ export const CareerMarketplace = () => {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
               whileHover={{ y: -4 }}
-              className="rounded-3xl glass p-0 hover:shadow-elegant transition-shadow overflow-hidden"
+              className="rounded-3xl glass p-5 md:p-6 hover:shadow-elegant transition-shadow border border-border/70"
             >
-              {/* Banner */}
-              <div className="h-16 bg-gradient-primary relative">
-                <div className="absolute inset-0 opacity-30 mix-blend-overlay" style={{
-                  backgroundImage: "radial-gradient(circle at 20% 50%, hsl(var(--accent)) 0%, transparent 40%)",
-                }} />
-              </div>
-
-              <div className="px-5 pb-5 -mt-7">
-                  <div className="flex items-start gap-4 min-w-0">
-                  <div className="w-14 h-14 rounded-2xl bg-card border-4 border-card text-primary grid place-items-center shrink-0 shadow-soft">
+              <div className="flex items-start gap-4 min-w-0">
+                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-card border border-border text-primary grid place-items-center shrink-0 shadow-soft">
                     <Building2 className="w-7 h-7" />
                   </div>
                   <div className="flex-1 pt-1 min-w-0">
@@ -85,7 +77,7 @@ export const CareerMarketplace = () => {
                       <Meta icon={<Users className="w-3.5 h-3.5" />} label={t.career.seats(p.seats)} />
                     </div>
 
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/60">
+                    <div className="flex items-center justify-between gap-3 mt-4 pt-4 border-t border-border/60">
                       <div>
                         <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{t.career.match}</div>
                         <div className="font-display font-bold text-xl text-gradient leading-none">{p.match}%</div>
@@ -95,7 +87,6 @@ export const CareerMarketplace = () => {
                         <Button size="sm" className="rounded-2xl bg-gradient-primary text-primary-foreground hover:opacity-95 shadow-soft">
                           {t.career.apply}
                         </Button>
-                      </div>
                     </div>
                   </div>
                 </div>
