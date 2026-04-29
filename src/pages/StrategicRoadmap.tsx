@@ -4,7 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { calculateDistinction } from "@/data/mockData";
 import { useStudentActivities } from "@/hooks/useStudentActivities";
 import { useI18n } from "@/i18n/I18nContext";
-import { ArrowLeft, BadgeCheck, BrainCircuit, CheckCircle2, Lightbulb, Target } from "lucide-react";
+import { ArrowLeft, BadgeCheck, CheckCircle2, Factory, Lightbulb, Network, Target } from "lucide-react";
 import { motion } from "framer-motion";
 
 export const StrategicRoadmap = () => {
@@ -23,13 +23,16 @@ export const StrategicRoadmap = () => {
             </Button>
           </Link>
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary ring-1 ring-primary/20">
-            <BrainCircuit className="w-3.5 h-3.5" /> {t.skills.chip}
+            <Network className="w-3.5 h-3.5" /> {t.skills.chip}
           </div>
         </div>
 
         <motion.section initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl bg-card border border-border p-6 md:p-8 shadow-soft">
           <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-8 items-center">
             <div>
+              <div className="mb-3 inline-grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/20">
+                <Factory className="h-6 w-6" />
+              </div>
               <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight">{t.roadmap.title}</h1>
               <p className="mt-3 text-muted-foreground max-w-2xl">{t.roadmap.sub}</p>
             </div>
