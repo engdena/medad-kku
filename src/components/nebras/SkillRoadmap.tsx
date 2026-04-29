@@ -1,5 +1,5 @@
 import { recommendedSkills } from "@/data/mockData";
-import { Compass, Clock, TrendingUp, Wallet, ArrowRight } from "lucide-react";
+import { Network, Clock, TrendingUp, Wallet, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useI18n } from "@/i18n/I18nContext";
@@ -20,7 +20,7 @@ export const SkillRoadmap = () => {
       >
         <div>
           <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-primary font-semibold">
-            <Compass className="w-3.5 h-3.5" /> {t.skills.chip}
+            <Network className="w-3.5 h-3.5" /> {t.skills.chip}
           </div>
           <h2 className="font-display font-bold text-2xl md:text-3xl mt-1">{t.skills.title}</h2>
           <p className="text-muted-foreground text-sm md:text-base max-w-2xl mt-1">{t.skills.sub}</p>

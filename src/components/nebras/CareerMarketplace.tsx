@@ -27,6 +27,7 @@ export const CareerMarketplace = () => {
           const company = lang === "ar" ? p.companyAr : p.company;
           const sector = lang === "ar" ? p.sectorAr : p.sector;
           const title = lang === "ar" ? p.titleAr : p.title;
+          const description = lang === "ar" ? p.descriptionAr : p.description;
           const budget = lang === "ar" ? p.budgetAr : p.budget;
           const location = lang === "ar" ? p.locationAr : p.location;
           const deadline = lang === "ar" ? p.deadlineAr : p.deadline;
@@ -62,6 +63,7 @@ export const CareerMarketplace = () => {
                     </div>
 
                     <h3 className="font-display font-bold text-lg leading-tight mt-3 break-words">{title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground break-words">{description}</p>
 
                     <div className="flex flex-wrap gap-1.5 mt-3">
                       {p.skills.map((s) => (
