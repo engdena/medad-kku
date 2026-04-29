@@ -1,5 +1,5 @@
 import { student, insights } from "@/data/mockData";
-import { TrendingUp, Award, Sparkles } from "lucide-react";
+import { TrendingUp, Award, Network } from "lucide-react";
 import { RiskGauge } from "./RiskGauge";
 import { GpaTrendChart } from "./GpaTrendChart";
 import { useI18n } from "@/i18n/I18nContext";
@@ -31,7 +31,7 @@ export const HeroDashboard = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-dark text-xs uppercase tracking-widest"
           >
-            <Sparkles className="w-3.5 h-3.5" /> {t.hero.badge}
+            <Network className="w-3.5 h-3.5" /> {t.hero.badge}
           </motion.div>
           <motion.h1
             {...fadeUp}
