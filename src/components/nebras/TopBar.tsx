@@ -1,4 +1,4 @@
-import { Sparkles, Sun, Moon, Accessibility, Bell, Search, Languages } from "lucide-react";
+import { Cog, Sun, Moon, Accessibility, Bell, Search, Languages, Network } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ export const TopBar = ({ onOpenAI }: { onOpenAI: () => void }) => {
           className="flex items-center gap-2.5"
         >
           <div className="w-9 h-9 rounded-2xl bg-gradient-primary grid place-items-center shadow-glow">
-            <Sparkles className="w-5 h-5 text-primary-foreground" />
+            <Cog className="w-5 h-5 text-primary-foreground" />
           </div>
           <div className={`leading-tight ${lang === "ar" ? "text-right" : ""}`}>
             <div className="font-display font-bold text-lg tracking-tight">{t.brand.name}</div>
@@ -70,7 +70,7 @@ export const TopBar = ({ onOpenAI }: { onOpenAI: () => void }) => {
             <Bell className="w-5 h-5" />
           </Button>
           <Button onClick={onOpenAI} className="rounded-2xl bg-gradient-primary text-primary-foreground hover:opacity-95 shadow-soft">
-            <Sparkles className="w-4 h-4" />
+            <Network className="w-4 h-4" />
             <span className="hidden sm:inline">{t.nav.aiConsultant}</span>
           </Button>
         </div>
