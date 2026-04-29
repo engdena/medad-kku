@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { recommendedSkills, calculateDistinction } from "@/data/mockData";
+import { calculateDistinction } from "@/data/mockData";
 import { useStudentActivities } from "@/hooks/useStudentActivities";
 import { useI18n } from "@/i18n/I18nContext";
 import { ArrowLeft, BadgeCheck, BrainCircuit, CheckCircle2, Lightbulb, Target } from "lucide-react";
@@ -79,11 +79,11 @@ export const StrategicRoadmap = () => {
             <div className="rounded-3xl glass p-5 shadow-soft">
               <h2 className="font-display font-bold text-2xl">{t.roadmap.successPath}</h2>
               <div className="mt-4 grid sm:grid-cols-2 gap-3">
-                {recommendedSkills.slice(0, 4).map((skill) => (
-                  <div key={skill.title} className="rounded-2xl bg-secondary/50 p-3">
-                    <div className="text-xs font-bold text-primary">{skill.match}% {t.skills.match}</div>
-                    <div className="font-display font-bold mt-1">{lang === "ar" ? skill.titleAr : skill.title}</div>
-                    <p className="text-xs text-muted-foreground mt-1">{lang === "ar" ? skill.reasonAr : skill.reason}</p>
+                {t.roadmap.steps.map((step, index) => (
+                  <div key={step.title} className="rounded-2xl bg-secondary/50 p-3">
+                    <div className="text-xs font-bold text-primary">{25 * (index + 1)}% {t.roadmap.readiness}</div>
+                    <div className="font-display font-bold mt-1">{step.title}</div>
+                    <p className="text-xs text-muted-foreground mt-1">{step.desc}</p>
                   </div>
                 ))}
               </div>
