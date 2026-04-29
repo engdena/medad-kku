@@ -24,7 +24,7 @@ export const en = {
       "Employability score": "Employability score",
       "Skill-market gap": "Skill-market gap",
       "Peer percentile": "Peer percentile",
-      "4 competencies": "4 competencies",
+      "4 skills": "4 skills",
       "Top 22%": "Top 22%",
     } as Record<string, string>,
   },

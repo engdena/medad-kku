@@ -248,6 +248,6 @@ export const industryProjects = [
 export const insights = [
   { label: "Predicted final GPA", value: "3.58", trend: "+0.16", positive: true },
   { label: "Employability score", value: "78%", trend: "+12%", positive: true },
-  { label: "Skill-market gap", value: "4 competencies", trend: "−1", positive: true },
+  { label: "Skill-market gap", value: "4 skills", trend: "−1", positive: true },
   { label: "Peer percentile", value: "Top 22%", trend: "+5%", positive: true },
 ];
