@@ -33,7 +33,9 @@ export const PublicProfile = () => {
         <section className="rounded-3xl bg-card border border-border p-6 md:p-8 shadow-soft">
           <div className="grid lg:grid-cols-[1.25fr_0.75fr] gap-8 items-center">
             <div>
-              <div className="text-sm text-muted-foreground">{student.id} · {lang === "ar" ? student.college : student.college}</div>
+              <div className="text-sm text-muted-foreground">
+                {student.id} · {lang === "ar" ? student.collegeAr : student.college} · {lang === "ar" ? student.majorAr : student.major}
+              </div>
               <h1 className="font-display text-4xl md:text-5xl font-bold mt-2">{studentName}</h1>
               <p className="text-muted-foreground mt-2 max-w-2xl">{t.profile.sub}</p>
               <div className="grid sm:grid-cols-3 gap-3 mt-6">
