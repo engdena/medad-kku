@@ -1,5 +1,5 @@
 import { courses, gradeScale } from "@/data/mockData";
-import { ArrowUpRight, ArrowDownRight, Minus, Volume2, BarChart3 } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, Minus, Volume2, LineChart } from "lucide-react";
 import { useAccessibility } from "@/contexts/AccessibilityContext";
 import { useI18n } from "@/i18n/I18nContext";
 import { motion } from "framer-motion";
@@ -56,7 +56,7 @@ export const CoursesTable = () => {
               <Volume2 className="w-4 h-4" />
             </button>
           )}
-          <BarChart3 className="w-4 h-4 text-primary" />
+          <LineChart className="w-4 h-4 text-primary" />
         </div>
       </div>
 
