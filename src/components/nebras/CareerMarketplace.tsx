@@ -77,7 +77,7 @@ export const CareerMarketplace = () => {
                       <Meta icon={<Users className="w-3.5 h-3.5" />} label={t.career.seats(p.seats)} />
                     </div>
 
-                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/60">
+                    <div className="flex items-center justify-between gap-3 mt-4 pt-4 border-t border-border/60">
                       <div>
                         <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{t.career.match}</div>
                         <div className="font-display font-bold text-xl text-gradient leading-none">{p.match}%</div>
@@ -87,7 +87,8 @@ export const CareerMarketplace = () => {
                         <Button size="sm" className="rounded-2xl bg-gradient-primary text-primary-foreground hover:opacity-95 shadow-soft">
                           {t.career.apply}
                         </Button>
-                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.article>
