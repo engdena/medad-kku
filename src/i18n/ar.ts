@@ -26,7 +26,7 @@ export const ar: Dict = {
       "Employability score": "مؤشر القابلية للتوظيف",
       "Skill-market gap": "فجوة المهارات",
       "Peer percentile": "ترتيبك بين الزملاء",
-      "4 competencies": "4 كفاءات",
+      "4 skills": "4 مهارات",
       "Top 22%": "ضمن أعلى 22%",
     },
   },
