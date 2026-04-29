@@ -20,7 +20,7 @@ export const CoursesTable = () => {
   const { t, lang } = useI18n();
 
   const chartData = courses.map((c) => ({
-    name: lang === "ar" ? c.nameAr : c.name,
+    name: c.code,
     perf: c.performance,
     risk: c.risk,
   }));
