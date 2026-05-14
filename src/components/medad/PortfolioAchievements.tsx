@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Award, ExternalLink, Lightbulb, Pencil, Plus, Sparkles, Trash2, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { dispatchPortfolioChanged } from "@/hooks/usePortfolioBreakdown";
 
 type EntryType = "skill" | "achievement";
 type Category = "innovation" | "certification" | "leadership" | "volunteering" | "technical" | "skill";
@@ -93,6 +94,7 @@ export const PortfolioAchievements = () => {
 
   const persistDemo = (next: Entry[]) => {
     if (typeof window !== "undefined") window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    dispatchPortfolioChanged();
   };
 
   const submit = async (e: FormEvent) => {
@@ -118,7 +120,9 @@ export const PortfolioAchievements = () => {
         setEntries(next); persistDemo(next);
       }
       toast.success(L("Saved", "تم الحفظ"));
-      reset(); return;
+      reset();
+      dispatchPortfolioChanged();
+      return;
     }
     if (editingId) {
       const { error } = await supabase
@@ -144,7 +148,9 @@ export const PortfolioAchievements = () => {
       if (error) return toast.error(error.message);
     }
     toast.success(L("Saved", "تم الحفظ"));
-    reset(); load();
+    reset();
+    load();
+    dispatchPortfolioChanged();
   };
 
   const reset = () => { setDraft(blankDraft); setEditingId(null); setOpen(false); };
@@ -171,6 +177,7 @@ export const PortfolioAchievements = () => {
     if (error) return toast.error(error.message);
     toast.success(L("Deleted", "تم الحذف"));
     load();
+    dispatchPortfolioChanged();
   };
 
   const breakdown = useMemo(() => {
