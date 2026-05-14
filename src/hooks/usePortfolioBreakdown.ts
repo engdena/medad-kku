@@ -92,7 +92,7 @@ export const usePortfolioBreakdown = () => {
   useEffect(() => {
     if (isDemo || !user) return;
     const channel = supabase
-      .channel(`portfolio-${user.id}`)
+      .channel(`portfolio-${user.id}-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         {
