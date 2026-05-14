@@ -140,6 +140,42 @@ export type Database = {
         }
         Relationships: []
       }
+      student_portfolio_entries: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          entry_type: string
+          evidence_url: string | null
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          entry_type: string
+          evidence_url?: string | null
+          id?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          entry_type?: string
+          evidence_url?: string | null
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       transcript_access_grants: {
         Row: {
           company_id: string

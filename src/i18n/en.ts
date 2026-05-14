@@ -141,7 +141,7 @@ export const en = {
   tabs: {
     dashboard: "Dashboard",
     overview: "Overview",
-    portfolio: "Portfolio",
+    portfolio: "Portfolio & Achievements",
     skills: "Skills Matrix",
     skillsCourses: "Skills & Courses",
     projects: "Projects",

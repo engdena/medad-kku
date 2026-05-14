@@ -146,7 +146,7 @@ export const ar: Dict = {
   tabs: {
     dashboard: "اللوحة",
     overview: "النظرة العامة",
-    portfolio: "المحفظة",
+    portfolio: "ملفي وإنجازاتي",
     skills: "مصفوفة المهارات",
     skillsCourses: "المهارات والمقررات",
     projects: "المشاريع",

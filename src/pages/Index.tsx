@@ -5,7 +5,6 @@ import { CoursesTable } from "@/components/nebras/CoursesTable";
 import { SkillRoadmap } from "@/components/nebras/SkillRoadmap";
 import { CareerMarketplace } from "@/components/nebras/CareerMarketplace";
 import { AIConsultant } from "@/components/nebras/AIConsultant";
-import { ActivityPortfolio } from "@/components/nebras/ActivityPortfolio";
 import { DistinctionGauge } from "@/components/nebras/DistinctionGauge";
 import { GpaTrendChart } from "@/components/nebras/GpaTrendChart";
 import { MarketReadinessGauge } from "@/components/medad/MarketReadinessGauge";
@@ -13,6 +12,7 @@ import { SkillsMatrix } from "@/components/medad/SkillsMatrix";
 import { CurriculumRoadmap } from "@/components/medad/CurriculumRoadmap";
 import { MentorChat } from "@/components/medad/MentorChat";
 import { FloatingAIButton } from "@/components/medad/FloatingAIButton";
+import { PortfolioAchievements } from "@/components/medad/PortfolioAchievements";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useI18n } from "@/i18n/I18nContext";
 import { useStudentActivities } from "@/hooks/useStudentActivities";
@@ -23,7 +23,7 @@ import { TrendingUp } from "lucide-react";
 
 const Index = () => {
   const [aiOpen, setAiOpen] = useState(false);
-  const { activities, setActivities } = useStudentActivities();
+  const { activities } = useStudentActivities();
   const { user } = useAuth();
   const { data } = useStudentData(user?.id);
   const { t } = useI18n();
@@ -44,6 +44,7 @@ const Index = () => {
           <TabsList className="flex flex-wrap h-auto gap-1 bg-card border border-border rounded-2xl p-1">
             <TabsTrigger value="overview" className="rounded-xl">{t.tabs.overview}</TabsTrigger>
             <TabsTrigger value="skills" className="rounded-xl">{t.tabs.skillsCourses}</TabsTrigger>
+            <TabsTrigger value="portfolio" className="rounded-xl">{t.tabs.portfolio}</TabsTrigger>
             <TabsTrigger value="projects" className="rounded-xl">{t.tabs.projects}</TabsTrigger>
             <TabsTrigger value="roadmap" className="rounded-xl">{t.tabs.roadmap}</TabsTrigger>
             <TabsTrigger value="mentor" className="rounded-xl">{t.tabs.mentor}</TabsTrigger>
@@ -78,8 +79,11 @@ const Index = () => {
             <CoursesTable />
           </TabsContent>
 
+          <TabsContent value="portfolio" className="mt-6">
+            <PortfolioAchievements />
+          </TabsContent>
+
           <TabsContent value="projects" className="space-y-8 mt-6">
-            <ActivityPortfolio activities={activities} setActivities={setActivities} />
             <CareerMarketplace />
           </TabsContent>
 
