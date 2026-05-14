@@ -29,8 +29,8 @@ const App = () => (
         <Routes>
           <Route path="/auth" element={<Auth />} />
           <Route path="/" element={<RequireAuth allow={["student","admin"]}><Index /></RequireAuth>} />
-          <Route path="/mentor" element={<RequireAuth allow={["mentor","admin"]}><MentorView /></RequireAuth>} />
-          <Route path="/company" element={<RequireAuth allow={["company","admin"]}><CompanyView /></RequireAuth>} />
+          <Route path="/mentor" element={<RequireAuth><MentorView /></RequireAuth>} />
+          <Route path="/company" element={<RequireAuth><CompanyView /></RequireAuth>} />
           <Route path="/roadmap" element={<RequireAuth><StrategicRoadmap /></RequireAuth>} />
           <Route path="/profile/:slug" element={<PublicProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
