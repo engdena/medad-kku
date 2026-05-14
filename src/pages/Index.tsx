@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { TopBar } from "@/components/nebras/TopBar";
+import { HeroDashboard } from "@/components/nebras/HeroDashboard";
 import { GlobalPerformanceHeader } from "@/components/medad/GlobalPerformanceHeader";
 import { CoursesTable } from "@/components/nebras/CoursesTable";
 import { SkillRoadmap } from "@/components/nebras/SkillRoadmap";
@@ -35,7 +36,10 @@ const Index = () => {
       <TopBar onOpenAI={() => setAiOpen(true)} />
 
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-10">
-        <GlobalPerformanceHeader marketReadiness={data?.market_readiness_score ?? 0} />
+        <HeroDashboard />
+        <div className="mt-6">
+          <GlobalPerformanceHeader marketReadiness={data?.market_readiness_score ?? 0} />
+        </div>
 
         <Tabs defaultValue="overview" className="mt-8">
           <TabsList className="flex flex-wrap h-auto gap-1 bg-card border border-border rounded-2xl p-1">
