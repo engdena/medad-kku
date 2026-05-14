@@ -14,6 +14,7 @@ import MentorView from "./pages/MentorView.tsx";
 import CompanyView from "./pages/CompanyView.tsx";
 import { RequireAuth } from "@/components/medad/RoleRouter";
 import { DemoBanner } from "@/components/medad/DemoBanner";
+import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <I18nProvider>
+      <AccessibilityProvider>
       <AuthProvider>
       <Toaster />
       <Sonner />
@@ -38,6 +40,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
       </AuthProvider>
+      </AccessibilityProvider>
       </I18nProvider>
     </TooltipProvider>
   </QueryClientProvider>
