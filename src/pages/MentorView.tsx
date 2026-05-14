@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 type Student = {
   user_id: string;
-  full_name: string | null;
+  student_code: string | null;
   university_gpa: number | null;
   market_readiness_score: number | null;
 };
@@ -18,8 +18,8 @@ export default function MentorView() {
     (async () => {
       const { data } = await supabase
         .from("medad_student_data")
-        .select("user_id, full_name, university_gpa, market_readiness_score");
-      setStudents((data as Student[]) ?? []);
+        .select("user_id, student_code, university_gpa, market_readiness_score");
+      setStudents((data ?? []) as Student[]);
     })();
   }, []);
 
@@ -43,8 +43,8 @@ export default function MentorView() {
             {students.map((s) => {
               const mr = s.market_readiness_score ?? 0;
               return (
-                <tr key={s.user_id} className="border-t border-border">
-                  <td className="p-3">{s.full_name ?? "—"}</td>
+              <tr key={s.user_id} className="border-t border-border">
+                  <td className="p-3">{s.student_code ?? "—"}</td>
                   <td className="p-3">{s.university_gpa ?? "—"}</td>
                   <td className="p-3">{mr}%</td>
                   <td className="p-3">
