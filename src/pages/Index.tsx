@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { TopBar } from "@/components/nebras/TopBar";
 import { HeroDashboard } from "@/components/nebras/HeroDashboard";
+import { GlobalPerformanceHeader } from "@/components/medad/GlobalPerformanceHeader";
 import { CoursesTable } from "@/components/nebras/CoursesTable";
 import { SkillRoadmap } from "@/components/nebras/SkillRoadmap";
 import { CareerMarketplace } from "@/components/nebras/CareerMarketplace";
 import { AIConsultant } from "@/components/nebras/AIConsultant";
-import { DistinctionGauge } from "@/components/nebras/DistinctionGauge";
 import { GpaTrendChart } from "@/components/nebras/GpaTrendChart";
 import { MarketReadinessGauge } from "@/components/medad/MarketReadinessGauge";
 import { SkillsMatrix } from "@/components/medad/SkillsMatrix";
@@ -15,7 +15,6 @@ import { FloatingAIButton } from "@/components/medad/FloatingAIButton";
 import { PortfolioAchievements } from "@/components/medad/PortfolioAchievements";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useI18n } from "@/i18n/I18nContext";
-import { useStudentActivities } from "@/hooks/useStudentActivities";
 import { useStudentData } from "@/hooks/useStudentData";
 import { useAuth } from "@/hooks/useAuth";
 import { student } from "@/data/mockData";
@@ -23,7 +22,6 @@ import { TrendingUp } from "lucide-react";
 
 const Index = () => {
   const [aiOpen, setAiOpen] = useState(false);
-  const { activities } = useStudentActivities();
   const { user } = useAuth();
   const { data } = useStudentData(user?.id);
   const { t } = useI18n();
@@ -39,6 +37,9 @@ const Index = () => {
 
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-10">
         <HeroDashboard />
+        <div className="mt-6">
+          <GlobalPerformanceHeader marketReadiness={data?.market_readiness_score ?? 0} />
+        </div>
 
         <Tabs defaultValue="overview" className="mt-8">
           <TabsList className="flex flex-wrap h-auto gap-1 bg-card border border-border rounded-2xl p-1">
@@ -52,25 +53,22 @@ const Index = () => {
 
           <TabsContent value="overview" className="space-y-6 mt-6">
             <div className="grid lg:grid-cols-[1.1fr_1fr] gap-5 items-start">
-              <DistinctionGauge activities={activities} />
-              <div className="grid gap-5">
-                <MarketReadinessGauge value={data?.market_readiness_score ?? 0} />
-                <div className="rounded-3xl bg-card border border-border p-5 shadow-soft">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <div className="text-xs uppercase tracking-widest text-muted-foreground">{t.hero.gpa}</div>
-                      <div className="font-display font-bold text-2xl text-foreground">
-                        {student.gpa.toFixed(2)}
-                        <span className="text-sm font-normal text-muted-foreground"> / {student.gpaScale}</span>
-                      </div>
-                    </div>
-                    <div className="text-xs text-primary inline-flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3" /> {t.hero.gpaDelta}
+              <div className="rounded-3xl bg-card border border-border p-5 shadow-soft">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <div className="text-xs uppercase tracking-widest text-muted-foreground">{t.hero.gpa}</div>
+                    <div className="font-display font-bold text-2xl text-foreground">
+                      {student.gpa.toFixed(2)}
+                      <span className="text-sm font-normal text-muted-foreground"> / {student.gpaScale}</span>
                     </div>
                   </div>
-                  <GpaTrendChart data={student.trend} labels={student.semesters} />
+                  <div className="text-xs text-primary inline-flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" /> {t.hero.gpaDelta}
+                  </div>
                 </div>
+                <GpaTrendChart data={student.trend} labels={student.semesters} />
               </div>
+              <MarketReadinessGauge value={data?.market_readiness_score ?? 0} />
             </div>
           </TabsContent>
 
