@@ -1,7 +1,5 @@
 import { student, insights } from "@/data/mockData";
-import { TrendingUp, Award, Network } from "lucide-react";
-import { RiskGauge } from "./RiskGauge";
-import { GpaTrendChart } from "./GpaTrendChart";
+import { TrendingUp, Network } from "lucide-react";
 import { useI18n } from "@/i18n/I18nContext";
 import { motion } from "framer-motion";
 
@@ -24,7 +22,7 @@ export const HeroDashboard = () => {
       <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-accent/30 blur-3xl animate-float" />
       <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-primary-glow/30 blur-3xl animate-float" style={{ animationDelay: "1.2s" }} />
 
-      <div className="relative grid lg:grid-cols-[1.4fr_1fr] gap-8 items-center">
+      <div className="relative">
         <div>
           <motion.div
             {...fadeUp}
@@ -48,7 +46,7 @@ export const HeroDashboard = () => {
             {t.hero.summary("3.58")}
           </motion.p>
 
-          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl">
             {insights.map((i, idx) => (
               <motion.div
                 key={i.label}
@@ -68,38 +66,6 @@ export const HeroDashboard = () => {
               </motion.div>
             ))}
           </div>
-        </div>
-
-        <div className="grid gap-4">
-          <motion.div
-            initial={{ opacity: 0, x: lang === "ar" ? -20 : 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="rounded-2xl glass-dark p-5"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="text-xs uppercase tracking-widest text-primary-foreground/75">{t.hero.risk}</div>
-              <Award className="w-4 h-4 text-accent" />
-            </div>
-            <RiskGauge value={student.riskScore} band={student.riskBand} />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: lang === "ar" ? -20 : 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.42 }}
-            className="rounded-2xl glass-dark p-5"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <div className="text-xs uppercase tracking-widest text-primary-foreground/75">{t.hero.gpa}</div>
-                <div className="font-display font-bold text-2xl">
-                  {student.gpa.toFixed(2)} <span className="text-sm font-normal text-primary-foreground/60">/ {student.gpaScale}</span>
-                </div>
-              </div>
-              <div className="text-xs text-accent">{t.hero.gpaDelta}</div>
-            </div>
-            <GpaTrendChart data={student.trend} labels={student.semesters} />
-          </motion.div>
         </div>
       </div>
     </motion.section>
