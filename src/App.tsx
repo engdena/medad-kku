@@ -8,6 +8,11 @@ import PublicProfile from "./pages/PublicProfile.tsx";
 import StrategicRoadmap from "./pages/StrategicRoadmap.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { I18nProvider } from "@/i18n/I18nContext";
+import { AuthProvider } from "@/hooks/useAuth";
+import Auth from "./pages/Auth.tsx";
+import MentorView from "./pages/MentorView.tsx";
+import CompanyView from "./pages/CompanyView.tsx";
+import { RequireAuth } from "@/components/medad/RoleRouter";
 
 const queryClient = new QueryClient();
 
@@ -15,17 +20,22 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <I18nProvider>
+      <AuthProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/roadmap" element={<StrategicRoadmap />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/" element={<RequireAuth allow={["student","admin"]}><Index /></RequireAuth>} />
+          <Route path="/mentor" element={<RequireAuth allow={["mentor","admin"]}><MentorView /></RequireAuth>} />
+          <Route path="/company" element={<RequireAuth allow={["company","admin"]}><CompanyView /></RequireAuth>} />
+          <Route path="/roadmap" element={<RequireAuth><StrategicRoadmap /></RequireAuth>} />
           <Route path="/profile/:slug" element={<PublicProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      </AuthProvider>
       </I18nProvider>
     </TooltipProvider>
   </QueryClientProvider>
