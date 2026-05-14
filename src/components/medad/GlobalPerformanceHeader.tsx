@@ -18,6 +18,7 @@ import {
   Trophy,
   Wrench,
 } from "lucide-react";
+import { Briefcase, Gauge, Users } from "lucide-react";
 import { useI18n } from "@/i18n/I18nContext";
 import {
   distinctionGaugeColor,
@@ -170,7 +171,7 @@ export const GlobalPerformanceHeader = ({ marketReadiness }: Props) => {
 
         {/* RIGHT: Mini cards + tracker */}
         <div className="space-y-4">
-          <div className="grid sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <MiniCard
               icon={<GraduationCap className="w-4 h-4 text-accent" />}
               label={L("Academic GPA", "المعدل الأكاديمي")}
@@ -185,6 +186,43 @@ export const GlobalPerformanceHeader = ({ marketReadiness }: Props) => {
               hint={
                 <span className="inline-flex items-center gap-1 text-accent">
                   <TrendingUp className="w-3 h-3" /> {t.hero.gpaDelta}
+                </span>
+              }
+            />
+            <MiniCard
+              icon={<Briefcase className="w-4 h-4 text-accent" />}
+              label={L("Employability", "قابلية التوظيف")}
+              value={<>78<span className="text-sm font-normal text-primary-foreground/70">%</span></>}
+              hint={
+                <span className="inline-flex items-center gap-1 text-accent">
+                  <TrendingUp className="w-3 h-3" /> +12%
+                </span>
+              }
+            />
+            <MiniCard
+              icon={<Gauge className="w-4 h-4 text-accent" />}
+              label={L("Skills Gap", "فجوة المهارات")}
+              value={
+                <>
+                  4
+                  <span className="text-sm font-normal text-primary-foreground/70 ms-1">
+                    {L("skills", "مهارات")}
+                  </span>
+                </>
+              }
+              hint={
+                <span className="inline-flex items-center gap-1 text-accent">
+                  <TrendingUp className="w-3 h-3" /> −1
+                </span>
+              }
+            />
+            <MiniCard
+              icon={<Users className="w-4 h-4 text-accent" />}
+              label={L("Peer Percentile", "الترتيب بين الأقران")}
+              value={<>{L("Top 22%", "أعلى 22٪")}</>}
+              hint={
+                <span className="inline-flex items-center gap-1 text-accent">
+                  <TrendingUp className="w-3 h-3" /> +5%
                 </span>
               }
             />
