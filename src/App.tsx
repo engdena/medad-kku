@@ -13,6 +13,7 @@ import Auth from "./pages/Auth.tsx";
 import MentorView from "./pages/MentorView.tsx";
 import CompanyView from "./pages/CompanyView.tsx";
 import { RequireAuth } from "@/components/medad/RoleRouter";
+import { DemoBanner } from "@/components/medad/DemoBanner";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <DemoBanner />
         <Routes>
           <Route path="/auth" element={<Auth />} />
           <Route path="/" element={<RequireAuth allow={["student","admin"]}><Index /></RequireAuth>} />
