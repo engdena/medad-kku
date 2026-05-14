@@ -7,21 +7,41 @@ import { student, courses } from "@/data/mockData";
 import { toast } from "sonner";
 import { useI18n } from "@/i18n/I18nContext";
 import { AnimatePresence, motion } from "framer-motion";
+import type { StudentPerformanceRecord } from "@/lib/studentPerformance";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const buildSystem = (lang: "en" | "ar") => `You are Medad AI Consultant for King Khalid University. Be concise, warm, strategic.
+const buildSystem = (lang: "en" | "ar", focus?: StudentPerformanceRecord | null) => `You are Medad AI Consultant for King Khalid University. Be concise, warm, strategic.
 Student: ${student.name} (${student.arabicName}), ${student.major}, GPA ${student.gpa}/${student.gpaScale}, risk ${student.riskScore}/100 (${student.riskBand}).
 Courses: ${courses.map(c => `${c.name}(${c.grade},risk:${c.risk})`).join(", ")}.
 Use the grade scale A+, A, B+, B, C+, C, D+, D, F when discussing grades.
 Anchor advice to Industrial Engineering, operational excellence, supply chain optimization, reliability engineering, MBB-style consulting, Saudi Vision 2030, and the Saudi labor market. Use markdown.
+${focus ? `\nFOCUS STUDENT (the stakeholder is currently reviewing this profile — tailor every answer to them, name their skill gaps, and propose specific next actions):
+- Name: ${focus.name} (${focus.nameAr})
+- Track: ${focus.title}
+- GPA: ${focus.gpa.toFixed(2)} / 5.0
+- Self-learning hours: ${focus.selfLearningHours}
+- Market readiness: ${focus.marketReadiness}%
+- Technical skills: ${focus.technicalSkills.join(", ")}
+- Soft skills: ${focus.softSkills.join(", ")}
+- Status: ${focus.gpa < 3.75 || focus.marketReadiness < 70 ? "AT RISK — prioritize a remediation plan" : "HIGH POTENTIAL — propose stretch opportunities"}` : ""}
 IMPORTANT: Reply ONLY in ${lang === "ar" ? "Arabic (العربية)" : "English"}.`;
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-consultant`;
 
-export const AIConsultant = ({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) => {
+export const AIConsultant = ({
+  open,
+  onOpenChange,
+  focusStudent,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  focusStudent?: StudentPerformanceRecord | null;
+}) => {
   const { t, lang } = useI18n();
-  const firstName = lang === "ar" ? student.arabicName.split(" ")[0] : student.name.split(" ")[0];
+  const firstName = focusStudent
+    ? (lang === "ar" ? focusStudent.nameAr.split(" ")[0] : focusStudent.name.split(" ")[0])
+    : (lang === "ar" ? student.arabicName.split(" ")[0] : student.name.split(" ")[0]);
 
   const [messages, setMessages] = useState<Msg[]>([
     { role: "assistant", content: t.ai.welcome(firstName) },
@@ -30,10 +50,10 @@ export const AIConsultant = ({ open, onOpenChange }: { open: boolean; onOpenChan
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Reset welcome message when language changes
+  // Reset welcome message when language or focus changes
   useEffect(() => {
     setMessages([{ role: "assistant", content: t.ai.welcome(firstName) }]);
-  }, [lang, firstName, t]);
+  }, [lang, firstName, t, focusStudent?.id]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -53,7 +73,7 @@ export const AIConsultant = ({ open, onOpenChange }: { open: boolean; onOpenChan
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({
-          messages: [{ role: "system", content: buildSystem(lang) }, ...next.map(m => ({ role: m.role, content: m.content }))],
+          messages: [{ role: "system", content: buildSystem(lang, focusStudent) }, ...next.map(m => ({ role: m.role, content: m.content }))],
         }),
       });
       if (resp.status === 429) { toast.error("Rate limit reached. Please try again shortly."); setLoading(false); return; }
