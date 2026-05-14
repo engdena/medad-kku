@@ -28,6 +28,7 @@ import {
   type PortfolioCategory,
 } from "@/hooks/usePortfolioBreakdown";
 import { student } from "@/data/mockData";
+import { Network } from "lucide-react";
 
 type Props = {
   marketReadiness: number;
@@ -48,6 +49,7 @@ export const GlobalPerformanceHeader = ({ marketReadiness }: Props) => {
   const { t, lang } = useI18n();
   const ar = lang === "ar";
   const L = (en: string, arS: string) => (ar ? arS : en);
+  const firstName = ar ? student.arabicName.split(" ")[0] : student.name.split(" ")[0];
   const { byCat, total, percentage } = usePortfolioBreakdown();
   const level = distinctionLevel(percentage);
   const gaugeColor = distinctionGaugeColor(percentage);
@@ -84,6 +86,18 @@ export const GlobalPerformanceHeader = ({ marketReadiness }: Props) => {
     >
       <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-accent/25 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-primary-glow/25 blur-3xl pointer-events-none" />
+
+      <div className="relative mb-5">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-dark text-[11px] uppercase tracking-widest">
+          <Network className="w-3.5 h-3.5" /> {t.hero.badge}
+        </div>
+        <h1 className="mt-3 font-display text-3xl md:text-4xl font-bold leading-[1.05] tracking-tight">
+          {t.hero.welcome}, {firstName}.
+        </h1>
+        <p className="mt-2 text-sm md:text-base text-primary-foreground/85 max-w-2xl">
+          {t.hero.summary(student.gpa.toFixed(2))}
+        </p>
+      </div>
 
       <div className="relative grid lg:grid-cols-[minmax(0,360px)_1fr] gap-6 items-center">
         {/* LEFT: Distinction Gauge */}
