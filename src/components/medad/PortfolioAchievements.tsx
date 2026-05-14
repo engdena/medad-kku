@@ -92,6 +92,16 @@ export const PortfolioAchievements = () => {
 
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [user?.id]);
 
+  useEffect(() => {
+    const open = () => { setEditingId(null); setDraft(blankDraft); setOpen(true); };
+    if (typeof window !== "undefined")
+      window.addEventListener("medad:open-portfolio-dialog", open);
+    return () => {
+      if (typeof window !== "undefined")
+        window.removeEventListener("medad:open-portfolio-dialog", open);
+    };
+  }, []);
+
   const persistDemo = (next: Entry[]) => {
     if (typeof window !== "undefined") window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     dispatchPortfolioChanged();
