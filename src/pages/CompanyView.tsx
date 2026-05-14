@@ -3,6 +3,7 @@ import { useI18n } from "@/i18n/I18nContext";
 import { TopBar } from "@/components/nebras/TopBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Sparkles } from "lucide-react";
 import { FloatingAIButton } from "@/components/medad/FloatingAIButton";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -42,6 +43,7 @@ export default function CompanyView() {
   const { t, lang } = useI18n();
   const navigate = useNavigate();
   const [aiOpen, setAiOpen] = useState(false);
+  const [focusStudent, setFocusStudent] = useState<StudentPerformanceRecord | null>(null);
   const [students, setStudents] = useState<StudentPerformanceRecord[]>(() => mapStudentPerformanceRows([]));
 
   useEffect(() => {
@@ -70,7 +72,11 @@ export default function CompanyView() {
   return (
     <div className="min-h-screen bg-background">
       <TopBar onOpenAI={() => setAiOpen(true)} />
-      <AIConsultant open={aiOpen} onOpenChange={setAiOpen} />
+      <AIConsultant
+        open={aiOpen}
+        onOpenChange={(v) => { setAiOpen(v); if (!v) setFocusStudent(null); }}
+        focusStudent={focusStudent}
+      />
 
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-8">
         <div className="flex items-start justify-between mb-6 gap-4">
@@ -82,12 +88,17 @@ export default function CompanyView() {
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {students.map((p) => (
+          {students.map((p, idx) => (
             <article key={p.id} className="rounded-2xl border border-border bg-card p-5 shadow-soft hover:shadow-glow transition-all">
               <header className="flex items-start justify-between gap-3 mb-4">
                 <div>
-                  <h3 className="font-display font-bold text-lg leading-tight">
+                  <h3 className="font-display font-bold text-lg leading-tight flex items-center gap-2 flex-wrap">
                     {lang === "ar" ? p.nameAr : p.name}
+                    {idx === 0 && p.name.toLowerCase().startsWith("faisal") && (
+                      <Badge className="bg-primary/10 text-primary border-primary/30 hover:bg-primary/10">
+                        {lang === "ar" ? "الأفضل أداءً" : "Top Performer"}
+                      </Badge>
+                    )}
                   </h3>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {lang === "ar" ? p.titleAr : p.title}
@@ -119,12 +130,22 @@ export default function CompanyView() {
                 </div>
               </section>
 
-              <Button
-                className="w-full rounded-xl bg-gradient-primary text-primary-foreground"
-                onClick={() => navigate(`/profile/${p.profileSlug}`)}
-              >
-                {t.companyView.viewPortfolio}
-              </Button>
+              <div className="flex flex-col gap-2">
+                <Button
+                  className="w-full rounded-xl bg-gradient-primary text-primary-foreground"
+                  onClick={() => navigate(`/profile/${p.profileSlug}`)}
+                >
+                  {t.companyView.viewPortfolio}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full rounded-xl gap-1.5"
+                  onClick={() => { setFocusStudent(p); setAiOpen(true); }}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  {lang === "ar" ? "تحليل الذكاء الاصطناعي" : "AI Fit Analysis"}
+                </Button>
+              </div>
             </article>
           ))}
           {students.length === 0 && (
