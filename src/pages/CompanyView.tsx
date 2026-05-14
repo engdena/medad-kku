@@ -27,11 +27,9 @@ export default function CompanyView() {
 
   const requestAccess = async (studentId: string) => {
     if (!user) return;
-    await supabase.from("transcript_access_grants").insert({
-      student_id: studentId,
-      company_id: user.id,
-      status: "pending",
-    });
+    await supabase.from("transcript_access_grants").insert([
+      { student_id: studentId, company_id: user.id },
+    ]);
   };
 
   return (
