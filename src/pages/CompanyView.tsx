@@ -4,9 +4,15 @@ import { TopBar } from "@/components/nebras/TopBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FloatingAIButton } from "@/components/medad/FloatingAIButton";
-import { talentPool } from "@/data/talentPool";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  mapStudentPerformanceRows,
+  STUDENT_PERFORMANCE_TABLE,
+  type StudentPerformanceClient,
+  type StudentPerformanceRecord,
+} from "@/lib/studentPerformance";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AIConsultant } from "@/components/nebras/AIConsultant";
 
 const ReadinessRing = ({ value }: { value: number }) => {
@@ -36,6 +42,30 @@ export default function CompanyView() {
   const { t, lang } = useI18n();
   const navigate = useNavigate();
   const [aiOpen, setAiOpen] = useState(false);
+  const [students, setStudents] = useState<StudentPerformanceRecord[]>(() => mapStudentPerformanceRows([]));
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchData = async () => {
+      const { data, error } = await (supabase as unknown as StudentPerformanceClient)
+        .from(STUDENT_PERFORMANCE_TABLE)
+        .select("*");
+
+      if (error) {
+        console.error("Unable to load student performance readiness data", error);
+      }
+
+      if (mounted) {
+        setStudents(mapStudentPerformanceRows(error ? [] : data));
+      }
+    };
+
+    fetchData();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -52,7 +82,7 @@ export default function CompanyView() {
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {talentPool.map((p) => (
+          {students.map((p) => (
             <article key={p.id} className="rounded-2xl border border-border bg-card p-5 shadow-soft hover:shadow-glow transition-all">
               <header className="flex items-start justify-between gap-3 mb-4">
                 <div>
@@ -83,7 +113,7 @@ export default function CompanyView() {
                   {t.companyView.soft}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
-                  {(lang === "ar" ? p.softSkillsAr : p.softSkills).map((s) => (
+                  {p.softSkills.map((s) => (
                     <Badge key={s} variant="outline" className="rounded-full">{s}</Badge>
                   ))}
                 </div>
@@ -97,7 +127,7 @@ export default function CompanyView() {
               </Button>
             </article>
           ))}
-          {talentPool.length === 0 && (
+          {students.length === 0 && (
             <p className="text-muted-foreground">{t.companyView.empty}</p>
           )}
         </div>

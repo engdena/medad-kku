@@ -7,14 +7,47 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { FloatingAIButton } from "@/components/medad/FloatingAIButton";
-import { talentPool, isAtRisk } from "@/data/talentPool";
-import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  mapStudentPerformanceRows,
+  STUDENT_PERFORMANCE_TABLE,
+  type StudentPerformanceClient,
+  type StudentPerformanceRecord,
+} from "@/lib/studentPerformance";
+import { useEffect, useState } from "react";
 import { AIConsultant } from "@/components/nebras/AIConsultant";
+
+const isAtRisk = (student: Pick<StudentPerformanceRecord, "gpa" | "marketReadiness">) =>
+  student.gpa < 3.75 || student.marketReadiness < 70;
 
 export default function MentorView() {
   const { signOut } = useAuth();
   const { t, lang } = useI18n();
   const [aiOpen, setAiOpen] = useState(false);
+  const [students, setStudents] = useState<StudentPerformanceRecord[]>(() => mapStudentPerformanceRows([]));
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchData = async () => {
+      const { data, error } = await (supabase as unknown as StudentPerformanceClient)
+        .from(STUDENT_PERFORMANCE_TABLE)
+        .select("*");
+
+      if (error) {
+        console.error("Unable to load student performance readiness data", error);
+      }
+
+      if (mounted) {
+        setStudents(mapStudentPerformanceRows(error ? [] : data));
+      }
+    };
+
+    fetchData();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -42,7 +75,7 @@ export default function MentorView() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {talentPool.map((s) => {
+              {students.map((s) => {
                 const risk = isAtRisk(s);
                 return (
                   <TableRow key={s.id}>
@@ -71,7 +104,7 @@ export default function MentorView() {
                   </TableRow>
                 );
               })}
-              {talentPool.length === 0 && (
+              {students.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={5} className="text-muted-foreground">{t.mentorView.empty}</TableCell>
                 </TableRow>
