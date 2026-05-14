@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth, enterDemoMode, type AppRole } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -59,6 +59,14 @@ const Auth = () => {
     if (r.error) toast.error(String((r.error as any)?.message ?? r.error));
   };
 
+  const enterDemo = (r: AppRole) => {
+    enterDemoMode(r);
+    toast.success(`Entered demo as ${r}`);
+    if (r === "mentor") nav("/mentor", { replace: true });
+    else if (r === "company") nav("/company", { replace: true });
+    else nav("/", { replace: true });
+  };
+
   return (
     <div className="min-h-screen grid place-items-center bg-gradient-subtle p-4">
       <div className="w-full max-w-md">
@@ -111,6 +119,34 @@ const Auth = () => {
             </Tabs>
           </CardContent>
         </Card>
+
+        <Card className="rounded-3xl mt-4 border-dashed border-accent/60 bg-accent/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse" />
+              Demo Access
+            </CardTitle>
+            <CardDescription>Skip authentication and explore each role.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-2">
+            <Button onClick={() => enterDemo("student")} variant="outline"
+              className="w-full rounded-2xl justify-start gap-3 border-primary/40 hover:bg-primary/10">
+              <GraduationCap className="w-4 h-4 text-primary" />
+              Enter as Student (Faisal)
+            </Button>
+            <Button onClick={() => enterDemo("mentor")} variant="outline"
+              className="w-full rounded-2xl justify-start gap-3 border-accent/40 hover:bg-accent/10">
+              <Users className="w-4 h-4 text-accent" />
+              Enter as Academic Mentor
+            </Button>
+            <Button onClick={() => enterDemo("company")} variant="outline"
+              className="w-full rounded-2xl justify-start gap-3 border-secondary-foreground/30 hover:bg-secondary/60">
+              <Building2 className="w-4 h-4" />
+              Enter as Company
+            </Button>
+          </CardContent>
+        </Card>
+
         <div className="text-center text-xs text-muted-foreground mt-4">
           <Link to="/" className="hover:underline">Back to home</Link>
         </div>
