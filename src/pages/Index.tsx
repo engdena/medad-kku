@@ -54,7 +54,7 @@ const Index = () => {
         <SidebarInset className="bg-transparent">
           <CommandTopBar />
 
-          <main className="flex-1 px-4 lg:px-8 py-6 md:py-8 max-w-[1400px] w-full mx-auto">
+          <div className="flex-1 px-4 lg:px-8 py-6 md:py-8 max-w-[1400px] w-full mx-auto">
             <AnimatePresence mode="wait">
               <motion.div
                 key={section}
@@ -178,7 +178,7 @@ const Index = () => {
             <footer className="pt-10 mt-10 pb-6 border-t border-border/60 text-center text-xs text-muted-foreground">
               {t.footer}
             </footer>
-          </main>
+          </div>
         </SidebarInset>
 
         <AIConsultant open={aiOpen} onOpenChange={setAiOpen} />
