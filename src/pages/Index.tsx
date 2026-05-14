@@ -7,7 +7,6 @@ import { CareerMarketplace } from "@/components/nebras/CareerMarketplace";
 import { AIConsultant } from "@/components/nebras/AIConsultant";
 import { ActivityPortfolio } from "@/components/nebras/ActivityPortfolio";
 import { DistinctionGauge } from "@/components/nebras/DistinctionGauge";
-import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { useI18n } from "@/i18n/I18nContext";
 import { useStudentActivities } from "@/hooks/useStudentActivities";
 
@@ -17,8 +16,7 @@ const Index = () => {
   const { t } = useI18n();
 
   return (
-    <AccessibilityProvider>
-      <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-gradient-subtle">
         {/* Decorative background blobs */}
         <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 -left-24 w-[34rem] h-[34rem] rounded-full bg-primary/10 blur-3xl" />
@@ -42,7 +40,6 @@ const Index = () => {
 
         <AIConsultant open={aiOpen} onOpenChange={setAiOpen} />
       </div>
-    </AccessibilityProvider>
   );
 };
 
