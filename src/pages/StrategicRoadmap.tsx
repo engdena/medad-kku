@@ -1,9 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { calculateDistinction, industryProjects } from "@/data/mockData";
 import { useStudentActivities } from "@/hooks/useStudentActivities";
 import { useI18n } from "@/i18n/I18nContext";
+import { CommandTopBar } from "@/components/medad/CommandTopBar";
+import type { SectionKey } from "@/components/medad/AppSidebar";
+import { useEffect } from "react";
 import {
   Award,
   Briefcase,
@@ -16,11 +19,6 @@ import {
   Truck,
   Languages,
   ClipboardList,
-  LayoutDashboard,
-  Map as MapIcon,
-  MessagesSquare,
-  Settings as SettingsIcon,
-  Trophy,
   MapPin,
   Sparkles,
   Target,
@@ -128,17 +126,14 @@ const CERTIFICATIONS = [
   },
 ] as const;
 
-const NAV_ITEMS = [
-  { key: "dashboard", labelEn: "Dashboard", labelAr: "لوحة القيادة", icon: LayoutDashboard, to: "/" },
-  { key: "portfolio", labelEn: "Portfolio", labelAr: "الملف", icon: Trophy, to: "/" },
-  { key: "roadmap", labelEn: "Roadmap", labelAr: "خارطة الطريق", icon: MapIcon, to: "/roadmap" },
-  { key: "mentor", labelEn: "Mentor", labelAr: "المرشد", icon: MessagesSquare, to: "/mentor" },
-  { key: "settings", labelEn: "Settings", labelAr: "الإعدادات", icon: SettingsIcon, to: "/" },
-] as const;
-
 export const StrategicRoadmap = () => {
   const { activities } = useStudentActivities();
-  const { t, lang } = useI18n();
+  const { t, lang, setLang } = useI18n();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (lang !== "ar") setLang("ar");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const isAr = lang === "ar";
   const dir = isAr ? "rtl" : "ltr";
   const distinction = calculateDistinction(activities);
@@ -147,47 +142,15 @@ export const StrategicRoadmap = () => {
   // Determine current step from readiness
   const currentStep = readiness < 40 ? 1 : readiness < 75 ? 2 : 3;
 
+  const handleNavSelect = (s: SectionKey) => {
+    if (s === "roadmap") return;
+    if (s === "mentor") navigate("/mentor");
+    else navigate("/");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-subtle" dir={dir} style={{ fontFamily: isAr ? "'Cairo', 'Inter', system-ui, sans-serif" : undefined }}>
-      {/* Fixed Glassmorphism Top Nav */}
-      <header className="sticky top-0 z-40 backdrop-blur-md bg-background/60 border-b border-border/60">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 h-16 flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2 shrink-0">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-primary grid place-items-center shadow-glow">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <div className="leading-tight hidden sm:block">
-              <div className="font-display font-bold text-base tracking-tight">{t.brand.name}</div>
-              <div className="text-[9px] uppercase tracking-[0.18em] text-muted-foreground -mt-0.5">{t.brand.sub}</div>
-            </div>
-          </Link>
-          <nav className="flex items-center gap-1 overflow-x-auto scrollbar-thin">
-            {NAV_ITEMS.map((n) => {
-              const active = n.key === "roadmap";
-              const Icon = n.icon;
-              const label = isAr ? n.labelAr : n.labelEn;
-              return (
-                <Link
-                  key={n.key}
-                  to={n.to}
-                  className={`relative px-3 md:px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-1.5 whitespace-nowrap ${
-                    active ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{label}</span>
-                  {active && (
-                    <motion.div
-                      layoutId="nav-underline"
-                      className="absolute left-2 right-2 -bottom-[5px] h-[3px] rounded-full bg-primary"
-                    />
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-      </header>
+      <CommandTopBar active="roadmap" onSelect={handleNavSelect} />
 
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-8 space-y-6">
 
