@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar, type SectionKey } from "@/components/medad/AppSidebar";
 import { CommandTopBar } from "@/components/medad/CommandTopBar";
@@ -29,8 +29,14 @@ const Index = () => {
   const isMobile = useIsMobile();
   const { t, lang } = useI18n();
   const navigate = useNavigate();
+  const location = useLocation();
   const ar = lang === "ar";
   const L = (en: string, arS: string) => (ar ? arS : en);
+
+  useEffect(() => {
+    const s = (location.state as { section?: SectionKey } | null)?.section;
+    if (s) setSection(s);
+  }, [location.state]);
 
   const goPortfolioAndAdd = () => {
     setSection("portfolio");
