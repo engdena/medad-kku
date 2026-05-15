@@ -145,7 +145,7 @@ export const StrategicRoadmap = () => {
 
   return (
     <SidebarProvider defaultOpen={false}>
-    <div className="min-h-screen w-full bg-gradient-subtle" dir={dir} style={{ fontFamily: isAr ? "'Cairo', 'Inter', system-ui, sans-serif" : undefined }}>
+    <div className="min-h-screen w-full bg-gradient-subtle" dir={dir}>
       <CommandTopBar active="roadmap" onSelect={handleNavSelect} />
 
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-8 space-y-6">
