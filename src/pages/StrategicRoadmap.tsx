@@ -234,8 +234,4 @@ const ProjectList = ({
   </ul>
 );
 
-const ReadinessChecklist = ({ items }: { items: string[] }) => (
-  <ul />
-);
-
 export default StrategicRoadmap;
