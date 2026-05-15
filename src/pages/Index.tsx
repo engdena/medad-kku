@@ -11,7 +11,6 @@ import { AIConsultant } from "@/components/nebras/AIConsultant";
 import { GpaTrendChart } from "@/components/nebras/GpaTrendChart";
 import { MarketReadinessGauge } from "@/components/medad/MarketReadinessGauge";
 import { SkillsMatrix } from "@/components/medad/SkillsMatrix";
-import { CurriculumRoadmap } from "@/components/medad/CurriculumRoadmap";
 import { MentorChat } from "@/components/medad/MentorChat";
 import { FloatingAIButton } from "@/components/medad/FloatingAIButton";
 import { PortfolioAchievements } from "@/components/medad/PortfolioAchievements";
@@ -138,7 +137,6 @@ const Index = () => {
                       </div>
                       <InsightWidgets onOpenRoadmap={() => navigate("/roadmap")} />
                     </div>
-                    <CurriculumRoadmap />
                     <SkillRoadmap />
                     <CareerMarketplace />
                   </div>
