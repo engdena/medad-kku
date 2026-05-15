@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -13,15 +12,12 @@ import {
   Factory,
   Lightbulb,
   Network,
-  Rocket,
   Sparkles,
   Target,
   TrendingUp,
   Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
-
-type PathMode = "skills" | "projects";
 
 const PHASES = [
   {
@@ -52,7 +48,6 @@ export const StrategicRoadmap = () => {
   const { t, lang } = useI18n();
   const distinction = calculateDistinction(activities);
   const readiness = Math.min(100, Math.round((distinction.percentage + 78) / 2));
-  const [mode, setMode] = useState<PathMode>("skills");
 
   const skillsPhase1 = recommendedSkills.slice(0, 2);
   const skillsPhase2 = recommendedSkills.slice(2, 4);
@@ -118,15 +113,10 @@ export const StrategicRoadmap = () => {
           </div>
         </motion.section>
 
-        {/* Segmented control */}
+        {/* Skill Path indicator */}
         <div className="flex items-center justify-center">
-          <div className="inline-flex items-center gap-1 p-1 rounded-2xl glass shadow-soft">
-            <SegButton active={mode === "skills"} onClick={() => setMode("skills")}>
-              <Sparkles className="w-3.5 h-3.5" /> Skill Path
-            </SegButton>
-            <SegButton active={mode === "projects"} onClick={() => setMode("projects")}>
-              <Rocket className="w-3.5 h-3.5" /> Project Path
-            </SegButton>
+          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-2xl glass shadow-soft text-xs font-bold text-primary">
+            <Sparkles className="w-3.5 h-3.5" /> Skill Path
           </div>
         </div>
 
@@ -163,22 +153,12 @@ export const StrategicRoadmap = () => {
 
                   {/* phase content */}
                   <div className="mt-4 space-y-2 flex-1">
-                    {mode === "skills" && phase.id === 1 &&
+                    {phase.id === 1 &&
                       skillsPhase1.map((s) => <CompactSkillCard key={s.title} skill={s} lang={lang} />)}
-                    {mode === "skills" && phase.id === 2 &&
+                    {phase.id === 2 &&
                       skillsPhase2.map((s) => <CompactSkillCard key={s.title} skill={s} lang={lang} />)}
-                    {mode === "skills" && phase.id === 3 && (
+                    {phase.id === 3 && (
                       <ProjectList projects={industryProjects} lang={lang} />
-                    )}
-
-                    {mode === "projects" && phase.id === 1 && (
-                      <ReadinessChecklist items={t.roadmap.goalsList.slice(0, 2)} />
-                    )}
-                    {mode === "projects" && phase.id === 2 && (
-                      <ReadinessChecklist items={t.roadmap.goalsList.slice(2)} />
-                    )}
-                    {mode === "projects" && phase.id === 3 && (
-                      <ProjectList projects={industryProjects} lang={lang} expanded />
                     )}
                   </div>
                 </motion.div>
@@ -190,27 +170,6 @@ export const StrategicRoadmap = () => {
     </div>
   );
 };
-
-const SegButton = ({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) => (
-  <button
-    onClick={onClick}
-    className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition-all ${
-      active
-        ? "bg-primary text-primary-foreground shadow-soft"
-        : "text-muted-foreground hover:text-foreground"
-    }`}
-  >
-    {children}
-  </button>
-);
 
 const CompactSkillCard = ({
   skill,
