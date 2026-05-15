@@ -5,21 +5,23 @@ import { calculateDistinction, industryProjects } from "@/data/mockData";
 import { useStudentActivities } from "@/hooks/useStudentActivities";
 import { useI18n } from "@/i18n/I18nContext";
 import {
-  ArrowLeft,
   Award,
   Briefcase,
   Building2,
   Calendar,
   ExternalLink,
-  GraduationCap,
   BarChart3,
   FileSpreadsheet,
   TrendingUp,
   Truck,
   Languages,
   ClipboardList,
+  LayoutDashboard,
+  Map as MapIcon,
+  MessagesSquare,
+  Settings as SettingsIcon,
+  Trophy,
   MapPin,
-  Network,
   Sparkles,
   Target,
   Zap,
@@ -27,9 +29,9 @@ import {
 import { motion } from "framer-motion";
 
 const STEPS = [
-  { id: 1, title: "Foundations", icon: Zap, points: "+5" },
-  { id: 2, title: "Specialization", icon: Award, points: "+10" },
-  { id: 3, title: "Industry Impact", icon: Briefcase, points: "+15" },
+  { id: 1, title: "Foundations", titleAr: "التأسيس", icon: Zap, points: "+5" },
+  { id: 2, title: "Specialization", titleAr: "التخصص", icon: Award, points: "+10" },
+  { id: 3, title: "Industry Impact", titleAr: "الأثر الصناعي", icon: Briefcase, points: "+15" },
 ] as const;
 
 const CERTIFICATIONS = [
@@ -41,6 +43,9 @@ const CERTIFICATIONS = [
     tagsAr: ["طلاب", "خريجون", "هندسة", "إدارة"],
     price: "850 SAR",
     priceAr: "850 ر.س",
+    provider: "PMI",
+    providerAr: "PMI",
+    demandBoost: 28,
     link: "https://www.pmi.org/certifications/certified-associate-capm",
   },
   {
@@ -51,6 +56,9 @@ const CERTIFICATIONS = [
     tagsAr: ["تقنية", "إدارة", "تحليل بيانات"],
     price: "190 SAR / month",
     priceAr: "190 ر.س / شهر",
+    provider: "Coursera",
+    providerAr: "كورسيرا",
+    demandBoost: 35,
     link: "https://www.coursera.org/professional-certificates/google-data-analytics",
   },
   {
@@ -61,6 +69,9 @@ const CERTIFICATIONS = [
     tagsAr: ["تحليل بيانات", "هندسة", "إحصاء"],
     price: "620 SAR",
     priceAr: "620 ر.س",
+    provider: "Microsoft",
+    providerAr: "مايكروسوفت",
+    demandBoost: 32,
     link: "https://learn.microsoft.com/en-us/credentials/certifications/data-analyst-associate/",
   },
   {
@@ -71,6 +82,9 @@ const CERTIFICATIONS = [
     tagsAr: ["جميع التخصصات", "مهارة أساسية"],
     price: "375 SAR",
     priceAr: "375 ر.س",
+    provider: "Microsoft",
+    providerAr: "مايكروسوفت",
+    demandBoost: 18,
     link: "https://learn.microsoft.com/en-us/credentials/certifications/mos-excel-expert-2019/",
   },
   {
@@ -81,6 +95,9 @@ const CERTIFICATIONS = [
     tagsAr: ["هندسة صناعية", "إدارة الجودة"],
     price: "1,500 SAR",
     priceAr: "1,500 ر.س",
+    provider: "Hadaf",
+    providerAr: "هدف",
+    demandBoost: 40,
     link: "https://iassc.org/six-sigma-certification/green-belt-certification/",
   },
   {
@@ -91,6 +108,9 @@ const CERTIFICATIONS = [
     tagsAr: ["لوجستيات", "هندسة صناعية"],
     price: "14,000 SAR",
     priceAr: "14,000 ر.س",
+    provider: "ASCM",
+    providerAr: "ASCM",
+    demandBoost: 45,
     link: "https://www.ascm.org/learning-development/certifications-credentials/cscp/",
   },
   {
@@ -101,13 +121,26 @@ const CERTIFICATIONS = [
     tagsAr: ["تطوير اللغة الإنجليزية"],
     price: "Free (Supported by HADAF)",
     priceAr: "مجاني (بدعم من هدف)",
+    provider: "Doroob",
+    providerAr: "دروب",
+    demandBoost: 22,
     link: "https://doroob.sa/ar/",
   },
+] as const;
+
+const NAV_ITEMS = [
+  { key: "dashboard", labelEn: "Dashboard", labelAr: "لوحة القيادة", icon: LayoutDashboard, to: "/" },
+  { key: "portfolio", labelEn: "Portfolio", labelAr: "الملف", icon: Trophy, to: "/" },
+  { key: "roadmap", labelEn: "Roadmap", labelAr: "خارطة الطريق", icon: MapIcon, to: "/roadmap" },
+  { key: "mentor", labelEn: "Mentor", labelAr: "المرشد", icon: MessagesSquare, to: "/mentor" },
+  { key: "settings", labelEn: "Settings", labelAr: "الإعدادات", icon: SettingsIcon, to: "/" },
 ] as const;
 
 export const StrategicRoadmap = () => {
   const { activities } = useStudentActivities();
   const { t, lang } = useI18n();
+  const isAr = lang === "ar";
+  const dir = isAr ? "rtl" : "ltr";
   const distinction = calculateDistinction(activities);
   const readiness = Math.min(100, Math.round((distinction.percentage + 78) / 2));
 
@@ -115,19 +148,48 @@ export const StrategicRoadmap = () => {
   const currentStep = readiness < 40 ? 1 : readiness < 75 ? 2 : 3;
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-8 space-y-6">
-        {/* Top bar */}
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <Link to="/">
-            <Button variant="outline" className="rounded-2xl gap-2">
-              <ArrowLeft className={`w-4 h-4 ${lang === "ar" ? "flip-rtl" : ""}`} /> {t.roadmap.back}
-            </Button>
+    <div className="min-h-screen bg-gradient-subtle" dir={dir} style={{ fontFamily: isAr ? "'Cairo', 'Inter', system-ui, sans-serif" : undefined }}>
+      {/* Fixed Glassmorphism Top Nav */}
+      <header className="sticky top-0 z-40 backdrop-blur-md bg-background/60 border-b border-border/60">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8 h-16 flex items-center justify-between gap-4">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
+            <div className="w-9 h-9 rounded-2xl bg-gradient-primary grid place-items-center shadow-glow">
+              <Sparkles className="w-5 h-5 text-primary-foreground" />
+            </div>
+            <div className="leading-tight hidden sm:block">
+              <div className="font-display font-bold text-base tracking-tight">{t.brand.name}</div>
+              <div className="text-[9px] uppercase tracking-[0.18em] text-muted-foreground -mt-0.5">{t.brand.sub}</div>
+            </div>
           </Link>
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary ring-1 ring-primary/20">
-            <Network className="w-3.5 h-3.5" /> {t.skills.chip}
-          </div>
+          <nav className="flex items-center gap-1 overflow-x-auto scrollbar-thin">
+            {NAV_ITEMS.map((n) => {
+              const active = n.key === "roadmap";
+              const Icon = n.icon;
+              const label = isAr ? n.labelAr : n.labelEn;
+              return (
+                <Link
+                  key={n.key}
+                  to={n.to}
+                  className={`relative px-3 md:px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+                    active ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{label}</span>
+                  {active && (
+                    <motion.div
+                      layoutId="nav-underline"
+                      className="absolute left-2 right-2 -bottom-[5px] h-[3px] rounded-full bg-primary"
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-8 space-y-6">
 
         {/* Header + readiness */}
         <motion.section
@@ -158,13 +220,14 @@ export const StrategicRoadmap = () => {
             {/* progress line */}
             <div className="absolute top-7 left-[10%] right-[10%] h-1 bg-border rounded-full" />
             <div
-              className="absolute top-7 left-[10%] h-1 bg-gradient-to-r from-primary to-accent rounded-full transition-all"
+              className={`absolute top-7 h-1 bg-gradient-to-r from-primary to-accent rounded-full transition-all ${isAr ? "right-[10%]" : "left-[10%]"}`}
               style={{ width: `${((currentStep - 1) / (STEPS.length - 1)) * 80}%` }}
             />
             <div className="grid grid-cols-3 relative">
               {STEPS.map((s, i) => {
                 const Icon = s.icon;
                 const active = s.id <= currentStep;
+                const title = isAr ? s.titleAr : s.title;
                 return (
                   <motion.div
                     key={s.id}
@@ -182,9 +245,9 @@ export const StrategicRoadmap = () => {
                     >
                       <Icon className="w-6 h-6" />
                     </div>
-                    <div className="font-display font-bold text-sm md:text-base">{s.title}</div>
+                    <div className="font-display font-bold text-sm md:text-base">{title}</div>
                     <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                      {s.points} pts
+                      {s.points} {isAr ? "نقطة" : "pts"}
                     </span>
                   </motion.div>
                 );
@@ -198,25 +261,25 @@ export const StrategicRoadmap = () => {
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div>
               <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-primary font-semibold">
-                <Briefcase className="w-3.5 h-3.5" /> Industry Opportunities
+                <Briefcase className="w-3.5 h-3.5" /> {isAr ? "الفرص الصناعية" : "Industry Opportunities"}
               </div>
               <h2 className="font-display font-bold text-xl md:text-2xl mt-1">
-                Sponsored projects · {industryProjects.length} live
+                {isAr ? `مشاريع مموَّلة · ${industryProjects.length} متاحة` : `Sponsored projects · ${industryProjects.length} live`}
               </h2>
             </div>
             <span className="text-[10px] font-bold text-accent bg-accent/10 px-2 py-1 rounded-full">
-              +15 pts on completion
+              {isAr ? "+15 نقطة عند الإكمال" : "+15 pts on completion"}
             </span>
           </div>
 
           <div className="overflow-x-auto -mx-4 px-4 pb-2 scrollbar-thin">
             <div className="flex gap-4 min-w-max">
               {industryProjects.map((p, idx) => {
-                const company = lang === "ar" ? p.companyAr : p.company;
-                const sector = lang === "ar" ? p.sectorAr : p.sector;
-                const title = lang === "ar" ? p.titleAr : p.title;
-                const location = lang === "ar" ? p.locationAr : p.location;
-                const deadline = lang === "ar" ? p.deadlineAr : p.deadline;
+                const company = isAr ? p.companyAr : p.company;
+                const sector = isAr ? p.sectorAr : p.sector;
+                const title = isAr ? p.titleAr : p.title;
+                const location = isAr ? p.locationAr : p.location;
+                const deadline = isAr ? p.deadlineAr : p.deadline;
                 return (
                   <motion.article
                     key={p.title}
@@ -230,7 +293,7 @@ export const StrategicRoadmap = () => {
                         <Building2 className="w-5 h-5" />
                       </div>
                       <span className="inline-flex items-center text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full ring-1 ring-primary/20">
-                        {p.match}% Match
+                        {p.match}% {isAr ? "توافق" : "Match"}
                       </span>
                     </div>
                     <div className="mt-3">
@@ -252,7 +315,7 @@ export const StrategicRoadmap = () => {
                       size="sm"
                       className="mt-4 w-full rounded-2xl bg-gradient-primary text-primary-foreground hover:opacity-95"
                     >
-                      Apply
+                      {isAr ? "تقدّم" : "Apply"}
                     </Button>
                   </motion.article>
                 );
@@ -265,16 +328,13 @@ export const StrategicRoadmap = () => {
         <section className="space-y-3">
           <div>
             <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-primary font-semibold">
-              <Sparkles className="w-3.5 h-3.5" />{" "}
-              {lang === "ar" ? "إجراءات موصى بها" : "Recommended Actions"}
+              <Sparkles className="w-3.5 h-3.5" /> {isAr ? "إجراءات موصى بها" : "Recommended Actions"}
             </div>
             <h2 className="font-display font-bold text-xl md:text-2xl mt-1">
-              {lang === "ar"
-                ? "عزز مؤشر التميز عبر شهادات احترافية"
-                : "Boost your Distinction Index"}
+              {isAr ? "عزز مؤشر التميز عبر شهادات احترافية" : "Boost your Distinction Index"}
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
-              {lang === "ar"
+              {isAr
                 ? "شهادات مختارة لتسريع جاهزيتك المهنية. سجّل مباشرة من الجهة المانحة."
                 : "Curated professional certifications to accelerate your readiness. Enroll directly with the issuing provider."}
             </p>
@@ -282,9 +342,10 @@ export const StrategicRoadmap = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {CERTIFICATIONS.map((c, idx) => {
               const Icon = c.icon;
-              const title = lang === "ar" ? c.titleAr : c.title;
-              const tags = lang === "ar" ? c.tagsAr : c.tags;
-              const price = lang === "ar" ? c.priceAr : c.price;
+              const title = isAr ? c.titleAr : c.title;
+              const tags = isAr ? c.tagsAr : c.tags;
+              const price = isAr ? c.priceAr : c.price;
+              const provider = isAr ? c.providerAr : c.provider;
               return (
                 <motion.div
                   key={c.link}
@@ -303,6 +364,17 @@ export const StrategicRoadmap = () => {
                   </div>
                   <div className="font-display font-bold text-sm mt-3 leading-tight line-clamp-2 min-h-[2.5rem]">
                     {title}
+                  </div>
+                  <div className="mt-2 flex items-center justify-between gap-2">
+                    <div className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-muted-foreground">
+                      <div className="grid h-5 w-5 place-items-center rounded-md bg-muted border border-border/70 text-[8px] font-black text-foreground">
+                        {provider.charAt(0)}
+                      </div>
+                      <span>{isAr ? `عبر ${provider}` : `via ${provider}`}</span>
+                    </div>
+                    <span className="text-[9px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full whitespace-nowrap ring-1 ring-primary/20">
+                      {isAr ? `+${c.demandBoost}٪ طلب` : `+${c.demandBoost}% demand`}
+                    </span>
                   </div>
                   <div className="mt-2 flex flex-wrap gap-1">
                     {tags.map((tag) => (
@@ -324,7 +396,7 @@ export const StrategicRoadmap = () => {
                       size="sm"
                       className="w-full rounded-xl text-[11px] bg-gradient-primary text-primary-foreground gap-1.5"
                     >
-                      {lang === "ar" ? "سجل الآن" : "Enroll Now"}
+                      {isAr ? `سجّل عبر ${provider}` : `Enroll via ${provider}`}
                       <ExternalLink className="w-3 h-3" />
                     </Button>
                   </a>
