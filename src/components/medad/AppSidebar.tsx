@@ -40,7 +40,7 @@ export const AppSidebar = ({ active, onSelect }: Props) => {
   ];
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
+    <Sidebar collapsible="offcanvas" className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-2.5 px-2 py-3">
           <div className="w-9 h-9 rounded-2xl bg-gradient-primary grid place-items-center shadow-glow shrink-0">

@@ -54,7 +54,7 @@ const Index = () => {
         <SidebarInset className="bg-transparent">
           <CommandTopBar />
 
-          <div className="flex-1 px-4 lg:px-8 py-6 md:py-8 max-w-[1400px] w-full mx-auto">
+          <div className="flex-1 w-full max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-6 md:py-10 transition-all duration-300">
             <AnimatePresence mode="wait">
               <motion.div
                 key={section}
