@@ -197,7 +197,7 @@ export const en = {
     empty: "No students assigned yet.",
   },
   companyView: {
-    title: "Talent Search",
+    title: "Engineering Talent Search",
     sub: "Discover Industrial Engineering talent ranked by Market Readiness.",
     search: "Search by skill, name, or program…",
     transcript: "View Full Transcript",
@@ -205,7 +205,7 @@ export const en = {
     request: "Request transcript access",
     granted: "Granted",
     requestSent: "Access request sent",
-    technical: "Technical Skills",
+    technical: "Competencies & Hard Skills",
     soft: "Soft Skills",
     readiness: "Market Readiness",
     viewPortfolio: "View Full IE Portfolio",

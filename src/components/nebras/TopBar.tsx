@@ -1,13 +1,13 @@
-import { Cog, Sun, Moon, Accessibility, Bell, Search, Languages, Network } from "lucide-react";
+import { Cog, Sun, Moon, Accessibility, Bell, Search, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { AccessibilityPanel } from "./AccessibilityPanel";
 import { useI18n } from "@/i18n/I18nContext";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 
-export const TopBar = ({ onOpenAI }: { onOpenAI: () => void }) => {
+export const TopBar = ({ onOpenAI }: { onOpenAI?: () => void } = {}) => {
+  void onOpenAI;
   const [dark, setDark] = useState(false);
   const [a11yOpen, setA11yOpen] = useState(false);
   const { t, lang, toggleLang } = useI18n();
@@ -55,11 +55,6 @@ export const TopBar = ({ onOpenAI }: { onOpenAI: () => void }) => {
             <Languages className="w-4 h-4" />
             <span className="text-xs">{t.nav.language}</span>
           </Button>
-          <Link to="/profile/faisal-al-qahtani" className="hidden lg:inline-flex">
-            <Button variant="outline" size="sm" className="rounded-xl font-semibold">
-              {t.nav.publicProfile}
-            </Button>
-          </Link>
           <Button variant="ghost" size="icon" className="rounded-xl" onClick={() => setA11yOpen(true)} aria-label={t.nav.accessibility}>
             <Accessibility className="w-5 h-5" />
           </Button>
@@ -68,10 +63,6 @@ export const TopBar = ({ onOpenAI }: { onOpenAI: () => void }) => {
           </Button>
           <Button variant="ghost" size="icon" className="rounded-xl" aria-label={t.nav.notifications}>
             <Bell className="w-5 h-5" />
-          </Button>
-          <Button onClick={onOpenAI} className="rounded-2xl bg-gradient-primary text-primary-foreground hover:opacity-95 shadow-soft">
-            <Network className="w-4 h-4" />
-            <span className="hidden sm:inline">{t.nav.aiConsultant}</span>
           </Button>
         </div>
       </div>
