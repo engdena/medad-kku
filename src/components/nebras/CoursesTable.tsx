@@ -1,29 +1,38 @@
 import { courses, gradeScale } from "@/data/mockData";
-import { ArrowUpRight, ArrowDownRight, Minus, Volume2, LineChart } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, Minus, Volume2, Sparkles, AlertTriangle, ShieldCheck, TrendingUp } from "lucide-react";
 import { useAccessibility } from "@/contexts/AccessibilityContext";
 import { useI18n } from "@/i18n/I18nContext";
 import { motion } from "framer-motion";
-import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-const riskClass = (r: string) =>
+type Risk = "low" | "medium" | "high";
+
+const riskFromGrade = (grade: string): Risk => {
+  const g = grade.toUpperCase();
+  if (g === "A" || g === "A+") return "low";
+  if (g === "B" || g === "B+") return "medium";
+  return "high"; // C+, C, D+, D, F
+};
+
+const badgeClass = (r: Risk) =>
   r === "high"
-    ? "bg-danger/15 text-danger ring-1 ring-danger/30"
+    ? "bg-danger text-white ring-1 ring-danger/40 shadow-[0_0_0_3px_hsl(var(--danger)/0.15)]"
     : r === "medium"
-    ? "bg-warning/15 text-warning ring-1 ring-warning/30"
-    : "bg-success/15 text-success ring-1 ring-success/30";
+    ? "bg-warning text-white ring-1 ring-warning/40 shadow-[0_0_0_3px_hsl(var(--warning)/0.15)]"
+    : "bg-success text-white ring-1 ring-success/40 shadow-[0_0_0_3px_hsl(var(--success)/0.15)]";
 
-const riskColor = (r: string) =>
-  r === "high" ? "hsl(var(--danger))" : r === "medium" ? "hsl(var(--warning))" : "hsl(var(--success))";
+const barClass = (r: Risk) =>
+  r === "high" ? "bg-danger" : r === "medium" ? "bg-warning" : "bg-success";
+
+const insightFor = (r: Risk) =>
+  r === "high"
+    ? "Predictive Model suggests intervention needed to avoid GPA impact."
+    : r === "medium"
+    ? "At risk of dropping to 3.5 GPA if finals aren't optimized."
+    : null;
 
 export const CoursesTable = () => {
   const { speak, ttsEnabled } = useAccessibility();
   const { t, lang } = useI18n();
-
-  const chartData = courses.map((c) => ({
-    name: c.code,
-    perf: c.performance,
-    risk: c.risk,
-  }));
 
   return (
     <motion.div
@@ -56,41 +65,31 @@ export const CoursesTable = () => {
               <Volume2 className="w-4 h-4" />
             </button>
           )}
-          <LineChart className="w-4 h-4 text-primary" />
+          <Sparkles className="w-4 h-4 text-primary" />
         </div>
       </div>
 
-      {/* Recharts: Academic Risk Levels */}
-      <div className="px-3 md:px-5 pt-4 h-56">
-        <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} margin={{ top: 8, right: 16, left: -10, bottom: 18 }}>
-            <XAxis dataKey="name" interval={0} height={44} tick={{ fontSize: 11, fontWeight: 700, fill: "hsl(var(--foreground))" }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} domain={[0, 100]} />
-            <Tooltip
-              cursor={{ fill: "hsl(var(--muted) / 0.4)" }}
-              contentStyle={{
-                background: "hsl(var(--card) / 0.95)",
-                backdropFilter: "blur(8px)",
-                border: "1px solid hsl(var(--border))",
-                borderRadius: 14,
-                fontSize: 12,
-              }}
-              formatter={(v: number) => [`${v}%`, t.courses.perf]}
-            />
-            <Bar dataKey="perf" radius={[10, 10, 4, 4]}>
-              {chartData.map((d, i) => (
-                <Cell key={i} fill={riskColor(d.risk)} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+      {/* AI Prediction Summary */}
+      <div className="mx-5 md:mx-6 mt-5 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-4 flex items-start gap-3">
+        <div className="rounded-xl bg-primary/15 text-primary p-2">
+          <TrendingUp className="w-4 h-4" />
+        </div>
+        <div className="text-sm leading-relaxed">
+          <div className="text-[10px] uppercase tracking-widest font-bold text-primary">AI Prediction Summary</div>
+          <p className="text-foreground mt-0.5">
+            Based on current performance, your <span className="font-bold">Predicted Semester GPA is 4.82</span>.
+            Maintain <span className="font-semibold text-success">Low Risk</span> in IE430 to secure this target.
+          </p>
+        </div>
       </div>
 
-      <div className="divide-y divide-border/60">
+      <div className="divide-y divide-border/60 mt-4">
         {courses.map((c, idx) => {
+          const risk = riskFromGrade(c.grade);
           const Icon = c.trend === "up" ? ArrowUpRight : c.trend === "down" ? ArrowDownRight : Minus;
           const trendColor =
-            c.trend === "up" ? "text-success" : c.trend === "down" ? "text-danger" : "text-muted-foreground";
+            risk === "low" ? "text-success" : risk === "medium" ? "text-warning" : "text-danger";
+          const insight = insightFor(risk);
           return (
             <motion.div
               key={c.code}
@@ -112,17 +111,23 @@ export const CoursesTable = () => {
                     whileInView={{ width: `${c.performance}%` }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.9, delay: 0.1 + idx * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                    className="h-full bg-gradient-primary"
+                    className={`h-full ${barClass(risk)}`}
                   />
                 </div>
                 <div className="text-[11px] text-muted-foreground mt-1">{c.performance}%</div>
+                {insight && (
+                  <div className={`mt-1 flex items-start gap-1 text-[10px] leading-snug ${risk === "high" ? "text-danger" : "text-warning"}`}>
+                    {risk === "high" ? <AlertTriangle className="w-3 h-3 mt-px shrink-0" /> : <ShieldCheck className="w-3 h-3 mt-px shrink-0" />}
+                    <span>{insight}</span>
+                  </div>
+                )}
               </div>
               <div className={`col-span-1 ${trendColor}`}>
                 <Icon className="w-4 h-4" />
               </div>
               <div className="col-span-12 md:col-span-1 flex md:justify-end">
-                <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-full font-semibold ${riskClass(c.risk)}`}>
-                  {t.courses.risk[c.risk]}
+                <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-full font-bold ${badgeClass(risk)}`}>
+                  {t.courses.risk[risk]}
                 </span>
               </div>
             </motion.div>
