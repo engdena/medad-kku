@@ -14,6 +14,14 @@ import {
   Briefcase,
   Building2,
   Calendar,
+  ExternalLink,
+  GraduationCap,
+  BarChart3,
+  FileSpreadsheet,
+  TrendingUp,
+  Truck,
+  Languages,
+  ClipboardList,
   MapPin,
   Network,
   Sparkles,
@@ -26,6 +34,79 @@ const STEPS = [
   { id: 1, title: "Foundations", icon: Zap, points: "+5" },
   { id: 2, title: "Specialization", icon: Award, points: "+10" },
   { id: 3, title: "Industry Impact", icon: Briefcase, points: "+15" },
+] as const;
+
+const CERTIFICATIONS = [
+  {
+    title: "Certified Associate in Project Management (CAPM)",
+    titleAr: "شهادة المساعد المعتمد في إدارة المشاريع (CAPM)",
+    icon: ClipboardList,
+    tags: ["Students", "Graduates", "Engineering", "Administration"],
+    tagsAr: ["طلاب", "خريجون", "هندسة", "إدارة"],
+    price: "850 SAR",
+    priceAr: "850 ر.س",
+    link: "https://www.pmi.org/certifications/certified-associate-capm",
+  },
+  {
+    title: "Google Data Analytics Professional Certificate",
+    titleAr: "شهادة جوجل المهنية في تحليل البيانات",
+    icon: BarChart3,
+    tags: ["Tech", "Administration", "Data Analysis"],
+    tagsAr: ["تقنية", "إدارة", "تحليل بيانات"],
+    price: "190 SAR / month",
+    priceAr: "190 ر.س / شهر",
+    link: "https://www.coursera.org/professional-certificates/google-data-analytics",
+  },
+  {
+    title: "Microsoft Power BI Data Analyst Associate (PL-300)",
+    titleAr: "محلل بيانات Power BI من مايكروسوفت (PL-300)",
+    icon: TrendingUp,
+    tags: ["Data Analysis", "Engineering", "Statistics"],
+    tagsAr: ["تحليل بيانات", "هندسة", "إحصاء"],
+    price: "620 SAR",
+    priceAr: "620 ر.س",
+    link: "https://learn.microsoft.com/en-us/credentials/certifications/data-analyst-associate/",
+  },
+  {
+    title: "Microsoft Office Specialist: Excel Expert (MO-211)",
+    titleAr: "أخصائي مايكروسوفت أوفيس: خبير إكسل (MO-211)",
+    icon: FileSpreadsheet,
+    tags: ["All Majors", "Core Skill"],
+    tagsAr: ["جميع التخصصات", "مهارة أساسية"],
+    price: "375 SAR",
+    priceAr: "375 ر.س",
+    link: "https://learn.microsoft.com/en-us/credentials/certifications/mos-excel-expert-2019/",
+  },
+  {
+    title: "Lean Six Sigma Green Belt (ICGB)",
+    titleAr: "الحزام الأخضر في لين سيكس سيغما (ICGB)",
+    icon: Award,
+    tags: ["Industrial Engineering", "Quality Management"],
+    tagsAr: ["هندسة صناعية", "إدارة الجودة"],
+    price: "1,500 SAR",
+    priceAr: "1,500 ر.س",
+    link: "https://iassc.org/six-sigma-certification/green-belt-certification/",
+  },
+  {
+    title: "Certified Supply Chain Professional (CSCP)",
+    titleAr: "المحترف المعتمد في سلاسل الإمداد (CSCP)",
+    icon: Truck,
+    tags: ["Logistics", "Industrial Engineering"],
+    tagsAr: ["لوجستيات", "هندسة صناعية"],
+    price: "14,000 SAR",
+    priceAr: "14,000 ر.س",
+    link: "https://www.ascm.org/learning-development/certifications-credentials/cscp/",
+  },
+  {
+    title: "IELTS Preparation — Doroob Platform",
+    titleAr: "التحضير لاختبار آيلتس — منصة دروب",
+    icon: Languages,
+    tags: ["English Language Development"],
+    tagsAr: ["تطوير اللغة الإنجليزية"],
+    price: "Free (Supported by HADAF)",
+    priceAr: "مجاني (بدعم من هدف)",
+    link: "https://doroob.sa/ar/",
+  },
 ] as const;
 
 export const StrategicRoadmap = () => {
@@ -184,48 +265,73 @@ export const StrategicRoadmap = () => {
           </div>
         </section>
 
-        {/* Recommended Skill Actions with point labels */}
+        {/* Recommended Certifications */}
         <section className="space-y-3">
           <div>
             <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-primary font-semibold">
-              <Sparkles className="w-3.5 h-3.5" /> Recommended Actions
+              <Sparkles className="w-3.5 h-3.5" />{" "}
+              {lang === "ar" ? "إجراءات موصى بها" : "Recommended Actions"}
             </div>
             <h2 className="font-display font-bold text-xl md:text-2xl mt-1">
-              Boost your Distinction Index
+              {lang === "ar"
+                ? "عزز مؤشر التميز عبر شهادات احترافية"
+                : "Boost your Distinction Index"}
             </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              {lang === "ar"
+                ? "شهادات مختارة لتسريع جاهزيتك المهنية. سجّل مباشرة من الجهة المانحة."
+                : "Curated professional certifications to accelerate your readiness. Enroll directly with the issuing provider."}
+            </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {recommendedSkills.slice(0, 4).map((s, idx) => {
-              const title = lang === "ar" ? s.titleAr : s.title;
-              const provider = lang === "ar" ? s.providerAr : s.provider;
-              // Heuristic: top match → research(+15), then certification(+10), else hard skill(+5)
-              const pts = idx === 0 ? "+15" : idx < 3 ? "+10" : "+5";
-              const ptsLabel =
-                idx === 0 ? "Research" : idx < 3 ? "Certification" : "Hard Skill";
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {CERTIFICATIONS.map((c, idx) => {
+              const Icon = c.icon;
+              const title = lang === "ar" ? c.titleAr : c.title;
+              const tags = lang === "ar" ? c.tagsAr : c.tags;
+              const price = lang === "ar" ? c.priceAr : c.price;
               return (
                 <motion.div
-                  key={s.title}
+                  key={c.link}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  className="rounded-2xl glass p-4 shadow-soft flex flex-col"
+                  className="rounded-2xl glass p-4 shadow-soft flex flex-col border border-border/70"
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                      {provider}
+                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary/10 text-primary border border-primary/20 shrink-0">
+                      <Icon className="w-5 h-5" />
                     </div>
                     <span className="text-[10px] font-bold text-accent bg-accent/10 px-1.5 py-0.5 rounded-full whitespace-nowrap">
-                      {pts} · {ptsLabel}
+                      {price}
                     </span>
                   </div>
-                  <div className="font-display font-bold text-sm mt-1 leading-tight">{title}</div>
-                  <div className="mt-2 text-[11px] text-primary font-bold">{s.match}% Match</div>
-                  <Button
-                    size="sm"
-                    className="mt-3 w-full rounded-xl text-[11px] bg-gradient-primary text-primary-foreground"
+                  <div className="font-display font-bold text-sm mt-3 leading-tight line-clamp-2 min-h-[2.5rem]">
+                    {title}
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[10px] font-medium text-muted-foreground bg-muted/60 border border-border/60 px-1.5 py-0.5 rounded-full"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <a
+                    href={c.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-auto pt-3"
                   >
-                    Quick Enroll
-                  </Button>
+                    <Button
+                      size="sm"
+                      className="w-full rounded-xl text-[11px] bg-gradient-primary text-primary-foreground gap-1.5"
+                    >
+                      {lang === "ar" ? "سجل الآن" : "Enroll Now"}
+                      <ExternalLink className="w-3 h-3" />
+                    </Button>
+                  </a>
                 </motion.div>
               );
             })}
