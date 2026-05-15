@@ -8,7 +8,6 @@ import {
   ArrowLeft,
   Award,
   Briefcase,
-  CheckCircle2,
   Factory,
   Lightbulb,
   Network,
@@ -236,16 +235,7 @@ const ProjectList = ({
 );
 
 const ReadinessChecklist = ({ items }: { items: string[] }) => (
-  <ul className="space-y-1.5">
-    {items.map((g) => (
-      <li
-        key={g}
-        className="flex items-center gap-2 rounded-xl bg-card/70 border border-border px-3 py-2 text-xs font-bold"
-      >
-        <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" /> {g}
-      </li>
-    ))}
-  </ul>
+  <ul />
 );
 
 export default StrategicRoadmap;
