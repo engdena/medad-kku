@@ -6,6 +6,7 @@ import { useStudentActivities } from "@/hooks/useStudentActivities";
 import { useI18n } from "@/i18n/I18nContext";
 import { CommandTopBar } from "@/components/medad/CommandTopBar";
 import type { SectionKey } from "@/components/medad/AppSidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { useEffect } from "react";
 import {
   Award,
@@ -149,7 +150,8 @@ export const StrategicRoadmap = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-subtle" dir={dir} style={{ fontFamily: isAr ? "'Cairo', 'Inter', system-ui, sans-serif" : undefined }}>
+    <SidebarProvider defaultOpen={false}>
+    <div className="min-h-screen w-full bg-gradient-subtle" dir={dir} style={{ fontFamily: isAr ? "'Cairo', 'Inter', system-ui, sans-serif" : undefined }}>
       <CommandTopBar active="roadmap" onSelect={handleNavSelect} />
 
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-8 space-y-6">
