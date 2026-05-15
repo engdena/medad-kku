@@ -49,10 +49,12 @@ const Index = () => {
           <div className="absolute bottom-0 -right-24 w-[30rem] h-[30rem] rounded-full bg-accent/10 blur-3xl" />
         </div>
 
-        <AppSidebar active={section} onSelect={setSection} />
+        <div className="md:hidden contents">
+          <AppSidebar active={section} onSelect={setSection} />
+        </div>
 
         <SidebarInset className="bg-transparent">
-          <CommandTopBar />
+          <CommandTopBar active={section} onSelect={setSection} />
 
           <div className="flex-1 w-full max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-6 md:py-10 transition-all duration-300">
             <AnimatePresence mode="wait">
