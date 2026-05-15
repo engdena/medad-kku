@@ -23,16 +23,11 @@ const badgeClass = (r: Risk) =>
 const barClass = (r: Risk) =>
   r === "high" ? "bg-danger" : r === "medium" ? "bg-warning" : "bg-success";
 
-const insightFor = (r: Risk) =>
-  r === "high"
-    ? "Predictive Model suggests intervention needed to avoid GPA impact."
-    : r === "medium"
-    ? "At risk of dropping to 3.5 GPA if finals aren't optimized."
-    : null;
-
 export const CoursesTable = () => {
   const { speak, ttsEnabled } = useAccessibility();
   const { t, lang } = useI18n();
+  const insightFor = (r: Risk) =>
+    r === "high" ? t.courses.insightHigh : r === "medium" ? t.courses.insightMedium : null;
 
   return (
     <motion.div
@@ -75,11 +70,8 @@ export const CoursesTable = () => {
           <TrendingUp className="w-4 h-4" />
         </div>
         <div className="text-sm leading-relaxed">
-          <div className="text-[10px] uppercase tracking-widest font-bold text-primary">AI Prediction Summary</div>
-          <p className="text-foreground mt-0.5">
-            Based on current performance, your <span className="font-bold">Predicted Semester GPA is 4.82</span>.
-            Maintain <span className="font-semibold text-success">Low Risk</span> in IE430 to secure this target.
-          </p>
+          <div className="text-[10px] uppercase tracking-widest font-bold text-primary">{t.courses.aiSummaryLabel}</div>
+          <p className="text-foreground mt-0.5">{t.courses.aiSummary}</p>
         </div>
       </div>
 
