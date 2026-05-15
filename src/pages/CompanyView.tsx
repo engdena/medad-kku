@@ -3,8 +3,6 @@ import { useI18n } from "@/i18n/I18nContext";
 import { TopBar } from "@/components/nebras/TopBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles } from "lucide-react";
-import { FloatingAIButton } from "@/components/medad/FloatingAIButton";
 import { supabase } from "@/integrations/supabase/client";
 import {
   mapStudentPerformanceRows,
@@ -14,7 +12,6 @@ import {
 } from "@/lib/studentPerformance";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { AIConsultant } from "@/components/nebras/AIConsultant";
 
 const ReadinessRing = ({ value }: { value: number }) => {
   const r = 32;
@@ -42,8 +39,6 @@ export default function CompanyView() {
   const { signOut } = useAuth();
   const { t, lang } = useI18n();
   const navigate = useNavigate();
-  const [aiOpen, setAiOpen] = useState(false);
-  const [focusStudent, setFocusStudent] = useState<StudentPerformanceRecord | null>(null);
   const [students, setStudents] = useState<StudentPerformanceRecord[]>(() => mapStudentPerformanceRows([]));
 
   useEffect(() => {
@@ -71,12 +66,7 @@ export default function CompanyView() {
 
   return (
     <div className="min-h-screen bg-background">
-      <TopBar onOpenAI={() => setAiOpen(true)} />
-      <AIConsultant
-        open={aiOpen}
-        onOpenChange={(v) => { setAiOpen(v); if (!v) setFocusStudent(null); }}
-        focusStudent={focusStudent}
-      />
+      <TopBar />
 
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-8">
         <div className="flex items-start justify-between mb-6 gap-4">
@@ -119,31 +109,12 @@ export default function CompanyView() {
                 </div>
               </section>
 
-              <section className="mb-4">
-                <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1.5">
-                  {t.companyView.soft}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {p.softSkills.map((s) => (
-                    <Badge key={s} variant="outline" className="rounded-full">{s}</Badge>
-                  ))}
-                </div>
-              </section>
-
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 mt-4">
                 <Button
                   className="w-full rounded-xl bg-gradient-primary text-primary-foreground"
                   onClick={() => navigate(`/profile/${p.profileSlug}`)}
                 >
                   {t.companyView.viewPortfolio}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full rounded-xl gap-1.5"
-                  onClick={() => { setFocusStudent(p); setAiOpen(true); }}
-                >
-                  <Sparkles className="w-4 h-4" />
-                  {lang === "ar" ? "تحليل الذكاء الاصطناعي" : "AI Fit Analysis"}
                 </Button>
               </div>
             </article>
@@ -153,8 +124,6 @@ export default function CompanyView() {
           )}
         </div>
       </main>
-
-      <FloatingAIButton />
     </div>
   );
 }

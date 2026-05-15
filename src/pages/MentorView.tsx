@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { FloatingAIButton } from "@/components/medad/FloatingAIButton";
 import { supabase } from "@/integrations/supabase/client";
 import {
   mapStudentPerformanceRows,
@@ -16,8 +15,8 @@ import {
   type StudentPerformanceRecord,
 } from "@/lib/studentPerformance";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownUp, Sparkles } from "lucide-react";
-import { AIConsultant } from "@/components/nebras/AIConsultant";
+import { ArrowDownUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const isAtRisk = (student: Pick<StudentPerformanceRecord, "gpa" | "marketReadiness">) =>
   student.gpa < 3.75 || student.marketReadiness < 70;
@@ -25,8 +24,7 @@ const isAtRisk = (student: Pick<StudentPerformanceRecord, "gpa" | "marketReadine
 export default function MentorView() {
   const { signOut } = useAuth();
   const { t, lang } = useI18n();
-  const [aiOpen, setAiOpen] = useState(false);
-  const [focusStudent, setFocusStudent] = useState<StudentPerformanceRecord | null>(null);
+  const navigate = useNavigate();
   const [students, setStudents] = useState<StudentPerformanceRecord[]>(() => mapStudentPerformanceRows([]));
   const [query, setQuery] = useState("");
   const [sortDesc, setSortDesc] = useState(true);
@@ -58,7 +56,7 @@ export default function MentorView() {
     const q = query.trim().toLowerCase();
     const filtered = q
       ? students.filter((s) =>
-          [s.name, s.nameAr, s.title, s.titleAr, ...s.technicalSkills, ...s.softSkills]
+          [s.name, s.nameAr, s.title, s.titleAr, ...s.technicalSkills]
             .join(" ")
             .toLowerCase()
             .includes(q),
@@ -72,12 +70,7 @@ export default function MentorView() {
 
   return (
     <div className="min-h-screen bg-background">
-      <TopBar onOpenAI={() => setAiOpen(true)} />
-      <AIConsultant
-        open={aiOpen}
-        onOpenChange={(v) => { setAiOpen(v); if (!v) setFocusStudent(null); }}
-        focusStudent={focusStudent}
-      />
+      <TopBar />
 
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-8">
         <div className="flex items-start justify-between mb-6 gap-4">
@@ -116,7 +109,7 @@ export default function MentorView() {
                 <TableHead>{t.mentorView.selfHours}</TableHead>
                 <TableHead>{t.mentorView.readiness}</TableHead>
                 <TableHead>{t.mentorView.status}</TableHead>
-                <TableHead className="text-end">{lang === "ar" ? "إرشاد" : "Coach"}</TableHead>
+                <TableHead className="text-end">{lang === "ar" ? "الملف" : "Profile"}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -127,7 +120,12 @@ export default function MentorView() {
                   <TableRow key={s.id}>
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
-                        {lang === "ar" ? s.nameAr : s.name}
+                        <button
+                          onClick={() => navigate(`/profile/${s.profileSlug}`)}
+                          className="hover:underline text-foreground font-semibold text-start"
+                        >
+                          {lang === "ar" ? s.nameAr : s.name}
+                        </button>
                         {isTop && (
                           <Badge className="bg-primary/10 text-primary border-primary/30 hover:bg-primary/10">
                             {lang === "ar" ? "الأفضل أداءً" : "Top Performer"}
@@ -160,10 +158,9 @@ export default function MentorView() {
                         size="sm"
                         variant="outline"
                         className="rounded-xl gap-1.5"
-                        onClick={() => { setFocusStudent(s); setAiOpen(true); }}
+                        onClick={() => navigate(`/profile/${s.profileSlug}`)}
                       >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        {lang === "ar" ? "اسأل الذكاء" : "Ask AI"}
+                        {lang === "ar" ? "عرض الملف" : "View Profile"}
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -178,8 +175,6 @@ export default function MentorView() {
           </Table>
         </div>
       </main>
-
-      <FloatingAIButton />
     </div>
   );
 }
