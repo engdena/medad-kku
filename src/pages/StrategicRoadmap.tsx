@@ -139,8 +139,7 @@ export const StrategicRoadmap = () => {
 
   const handleNavSelect = (s: SectionKey) => {
     if (s === "roadmap") return;
-    if (s === "mentor") navigate("/mentor");
-    else navigate("/");
+    navigate("/", { state: { section: s } });
   };
 
   return (
