@@ -42,6 +42,16 @@ const Index = () => {
     }, 50);
   };
 
+  // The "Strategic Roadmap" tab is the single entry point for the roadmap.
+  // Selecting it always routes to the dedicated /roadmap page (single source of truth).
+  const handleSelect = (key: SectionKey) => {
+    if (key === "roadmap") {
+      navigate("/roadmap");
+      return;
+    }
+    setSection(key);
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gradient-subtle">
@@ -50,10 +60,10 @@ const Index = () => {
           <div className="absolute bottom-0 -right-24 w-[30rem] h-[30rem] rounded-full bg-accent/10 blur-3xl" />
         </div>
 
-        {isMobile && <AppSidebar active={section} onSelect={setSection} />}
+        {isMobile && <AppSidebar active={section} onSelect={handleSelect} />}
 
         <SidebarInset className="bg-transparent">
-          <CommandTopBar active={section} onSelect={setSection} />
+          <CommandTopBar active={section} onSelect={handleSelect} />
 
           <div className="flex-1 w-full max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-6 md:py-10 transition-all duration-300">
             <AnimatePresence mode="wait">
@@ -114,31 +124,6 @@ const Index = () => {
                     <PortfolioAchievements />
                     <SkillsMatrix />
                     <CoursesTable />
-                  </div>
-                )}
-
-                {section === "roadmap" && (
-                  <div className="space-y-8">
-                    <SectionHeader
-                      title={L("Strategic Roadmap", "الخارطة الاستراتيجية")}
-                      sub={L(
-                        "A guided path from coursework to industry impact, aligned with Vision 2030.",
-                        "خارطة موجّهة من المقررات الأكاديمية إلى الأثر الصناعي بما يتوافق مع رؤية 2030."
-                      )}
-                    />
-                    <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-5">
-                      <div className="rounded-3xl bg-card border border-border p-5 shadow-soft">
-                        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                          {t.readiness.title}
-                        </div>
-                        <div className="mt-2">
-                          <MarketReadinessGauge value={data?.market_readiness_score ?? 0} />
-                        </div>
-                      </div>
-                      <InsightWidgets onOpenRoadmap={() => navigate("/roadmap")} />
-                    </div>
-                    <SkillRoadmap />
-                    <CareerMarketplace />
                   </div>
                 )}
 
