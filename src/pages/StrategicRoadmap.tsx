@@ -1,11 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import {
-  calculateDistinction,
-  recommendedSkills,
-  industryProjects,
-} from "@/data/mockData";
+import { calculateDistinction, industryProjects } from "@/data/mockData";
 import { useStudentActivities } from "@/hooks/useStudentActivities";
 import { useI18n } from "@/i18n/I18nContext";
 import {
