@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { dispatchPortfolioChanged } from "@/hooks/usePortfolioBreakdown";
 
 type EntryType = "skill" | "achievement";
-type Category = "innovation" | "certification" | "leadership" | "volunteering" | "technical" | "skill";
+type Category = "innovation" | "certification" | "leadership" | "technical" | "volunteering";
 
 type Entry = {
   id: string;
@@ -31,22 +31,19 @@ const CATEGORY_POINTS: Record<Category, number> = {
   innovation: 15,
   certification: 10,
   leadership: 10,
+  technical: 10,
   volunteering: 5,
-  technical: 5,
-  skill: 5,
 };
 
-const CATEGORIES_FOR: Record<EntryType, Category[]> = {
-  achievement: ["innovation", "certification", "leadership", "volunteering"],
-  skill: ["technical", "skill"],
-};
+const CATEGORY_ORDER: Category[] = ["innovation", "certification", "leadership", "technical", "volunteering"];
+const entryTypeFor = (c: Category): EntryType => (c === "technical" ? "skill" : "achievement");
 
 const ANNUAL_TARGET = 100;
 
 const STORAGE_KEY = "medad-portfolio-entries-fallback";
 
-type Draft = { entry_type: EntryType; title: string; category: Category; evidence_url: string; description: string };
-const blankDraft: Draft = { entry_type: "achievement", title: "", category: "innovation", evidence_url: "", description: "" };
+type Draft = { title: string; category: Category; evidence_url: string; description: string };
+const blankDraft: Draft = { title: "", category: "innovation", evidence_url: "", description: "" };
 
 export const PortfolioAchievements = () => {
   const { user } = useAuth();
@@ -62,12 +59,11 @@ export const PortfolioAchievements = () => {
   const L = (en: string, arS: string) => (ar ? arS : en);
 
   const CAT_LABEL: Record<Category, string> = {
-    innovation: L("Innovation / Research", "ابتكار / بحث"),
+    innovation: L("Research / Innovation", "بحث / ابتكار"),
     certification: L("Certification", "شهادة احترافية"),
     leadership: L("Leadership", "قيادة"),
+    technical: L("Hard Skill", "مهارة تقنية"),
     volunteering: L("Volunteering", "تطوع"),
-    technical: L("Technical Skill", "مهارة تقنية"),
-    skill: L("Soft Skill", "مهارة شخصية"),
   };
 
   const load = async () => {
@@ -113,13 +109,17 @@ export const PortfolioAchievements = () => {
     if (isDemo) {
       const now = new Date().toISOString();
       if (editingId) {
-        const next = entries.map((it) => it.id === editingId ? { ...it, ...draft } as Entry : it);
+        const next = entries.map((it) =>
+          it.id === editingId
+            ? { ...it, ...draft, entry_type: entryTypeFor(draft.category) } as Entry
+            : it
+        );
         setEntries(next); persistDemo(next);
       } else {
         const newEntry: Entry = {
           id: crypto.randomUUID(),
           user_id: "demo",
-          entry_type: draft.entry_type,
+          entry_type: entryTypeFor(draft.category),
           title: draft.title.trim(),
           category: draft.category,
           evidence_url: draft.evidence_url || null,
@@ -138,7 +138,7 @@ export const PortfolioAchievements = () => {
       const { error } = await supabase
         .from("student_portfolio_entries")
         .update({
-          entry_type: draft.entry_type,
+          entry_type: entryTypeFor(draft.category),
           title: draft.title.trim(),
           category: draft.category,
           evidence_url: draft.evidence_url || null,
@@ -149,7 +149,7 @@ export const PortfolioAchievements = () => {
     } else {
       const { error } = await supabase.from("student_portfolio_entries").insert({
         user_id: user!.id,
-        entry_type: draft.entry_type,
+        entry_type: entryTypeFor(draft.category),
         title: draft.title.trim(),
         category: draft.category,
         evidence_url: draft.evidence_url || null,
@@ -168,9 +168,8 @@ export const PortfolioAchievements = () => {
   const startEdit = (entry: Entry) => {
     setEditingId(entry.id);
     setDraft({
-      entry_type: entry.entry_type,
       title: entry.title,
-      category: entry.category,
+      category: (CATEGORY_ORDER.includes(entry.category as Category) ? entry.category : "innovation") as Category,
       evidence_url: entry.evidence_url ?? "",
       description: entry.description ?? "",
     });
@@ -195,23 +194,20 @@ export const PortfolioAchievements = () => {
       innovation: { count: 0, points: 0 },
       certification: { count: 0, points: 0 },
       leadership: { count: 0, points: 0 },
-      volunteering: { count: 0, points: 0 },
       technical: { count: 0, points: 0 },
-      skill: { count: 0, points: 0 },
+      volunteering: { count: 0, points: 0 },
     };
     let total = 0;
     for (const e of entries) {
-      const pts = CATEGORY_POINTS[e.category];
-      byCat[e.category].count += 1;
-      byCat[e.category].points += pts;
+      const cat = e.category as Category;
+      const pts = CATEGORY_POINTS[cat];
+      if (pts == null) continue;
+      byCat[cat].count += 1;
+      byCat[cat].points += pts;
       total += pts;
     }
     return { byCat, total, percentage: Math.min(100, Math.round((total / ANNUAL_TARGET) * 100)) };
   }, [entries]);
-
-  const onTypeChange = (type: EntryType) => {
-    setDraft((d) => ({ ...d, entry_type: type, category: CATEGORIES_FOR[type][0] }));
-  };
 
   return (
     <section className="space-y-5">
@@ -244,30 +240,18 @@ export const PortfolioAchievements = () => {
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={submit} className="space-y-4 mt-2">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs font-semibold text-muted-foreground">{L("Type", "النوع")}</label>
-                    <Select value={draft.entry_type} onValueChange={(v) => onTypeChange(v as EntryType)}>
-                      <SelectTrigger className="rounded-2xl mt-1"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="achievement">{L("Achievement", "إنجاز")}</SelectItem>
-                        <SelectItem value="skill">{L("Skill", "مهارة")}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <label className="text-xs font-semibold text-muted-foreground">{L("Category", "التصنيف")}</label>
-                    <Select value={draft.category} onValueChange={(v) => setDraft({ ...draft, category: v as Category })}>
-                      <SelectTrigger className="rounded-2xl mt-1"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {CATEGORIES_FOR[draft.entry_type].map((c) => (
-                          <SelectItem key={c} value={c}>
-                            {CAT_LABEL[c]} · +{CATEGORY_POINTS[c]} {L("pts", "نقطة")}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div>
+                  <label className="text-xs font-semibold text-muted-foreground">{L("Category", "التصنيف")}</label>
+                  <Select value={draft.category} onValueChange={(v) => setDraft({ ...draft, category: v as Category })}>
+                    <SelectTrigger className="rounded-2xl mt-1"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {CATEGORY_ORDER.map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {CAT_LABEL[c]} · +{CATEGORY_POINTS[c]} {L("pts", "نقطة")}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-muted-foreground">{L("Title", "العنوان")}</label>
@@ -275,7 +259,7 @@ export const PortfolioAchievements = () => {
                     required
                     value={draft.title}
                     onChange={(e) => setDraft({ ...draft, title: e.target.value })}
-                    placeholder={draft.entry_type === "skill" ? L("e.g., Lean Six Sigma", "مثال: لين ستة سيجما") : L("e.g., Aramco Internship", "مثال: تدريب أرامكو")}
+                    placeholder={draft.category === "technical" ? L("e.g., Lean Six Sigma", "مثال: لين ستة سيجما") : L("e.g., Aramco Internship", "مثال: تدريب أرامكو")}
                     maxLength={140}
                     className="rounded-2xl mt-1"
                   />
@@ -339,13 +323,12 @@ export const PortfolioAchievements = () => {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant={entry.entry_type === "skill" ? "secondary" : "default"} className="rounded-full">
-                      {entry.entry_type === "skill" ? L("Skill", "مهارة") : L("Achievement", "إنجاز")}
+                    <Badge variant={entry.category === "technical" ? "secondary" : "default"} className="rounded-full">
+                      {CAT_LABEL[entry.category as Category] ?? entry.category}
                     </Badge>
                     <span className="inline-flex items-center gap-1 text-xs font-bold text-primary bg-primary/10 rounded-full px-2 py-0.5">
-                      <Award className="w-3 h-3" /> +{CATEGORY_POINTS[entry.category]} {L("pts", "نقطة")}
+                      <Award className="w-3 h-3" /> +{CATEGORY_POINTS[entry.category as Category] ?? 0} {L("pts", "نقطة")}
                     </span>
-                    <span className="text-xs text-muted-foreground">{CAT_LABEL[entry.category]}</span>
                   </div>
                   <h3 className="font-display font-bold text-lg mt-2 truncate">{entry.title}</h3>
                   {entry.description && (
@@ -407,7 +390,7 @@ export const PortfolioAchievements = () => {
           </div>
 
           <ul className="mt-4 space-y-2 text-sm">
-            {(Object.keys(CATEGORY_POINTS) as Category[]).map((c) => (
+            {CATEGORY_ORDER.map((c) => (
               <li key={c} className="flex items-center justify-between rounded-xl glass-dark px-3 py-2">
                 <span className="text-primary-foreground/85">{CAT_LABEL[c]}</span>
                 <span className="font-bold">
