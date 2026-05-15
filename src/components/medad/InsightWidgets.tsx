@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Lightbulb, MapPin, Target } from "lucide-react";
+import { ArrowRight, Briefcase, Lightbulb, MapPin, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useI18n } from "@/i18n/I18nContext";
+import { industryProjects } from "@/data/mockData";
+import { Link } from "react-router-dom";
 import {
   distinctionLevel,
   PORTFOLIO_ANNUAL_TARGET,
@@ -97,6 +99,46 @@ export const InsightWidgets = ({ onOpenRoadmap }: Props) => {
           {L("Open full roadmap", "افتح الخارطة الكاملة")}
           <ArrowRight className={`w-4 h-4 ms-1 ${ar ? "flip-rtl" : ""}`} />
         </Button>
+      </motion.section>
+
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="rounded-3xl border border-border bg-card p-5 shadow-soft"
+      >
+        <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-widest text-primary font-semibold">
+          <Briefcase className="w-3.5 h-3.5" /> {L("Top Opportunities", "أبرز الفرص")}
+        </div>
+        <h3 className="font-display font-bold text-lg mt-1">
+          {L("Sponsored projects", "مشاريع ممَوَّلة")}
+        </h3>
+        <ul className="mt-3 space-y-2">
+          {industryProjects.slice(0, 3).map((p) => {
+            const company = ar ? p.companyAr : p.company;
+            const sector = ar ? p.sectorAr : p.sector;
+            return (
+              <li
+                key={p.company}
+                className="flex items-center justify-between gap-2 rounded-xl bg-muted/40 border border-border/60 px-3 py-2"
+              >
+                <div className="min-w-0">
+                  <div className="font-bold text-xs truncate">{company}</div>
+                  <div className="text-[10px] text-muted-foreground truncate">{sector}</div>
+                </div>
+                <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                  {p.match}%
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        <Link to="/roadmap">
+          <Button variant="outline" size="sm" className="rounded-xl w-full mt-4 justify-center">
+            {L("View all opportunities", "عرض كل الفرص")}
+            <ArrowRight className={`w-4 h-4 ms-1 ${ar ? "flip-rtl" : ""}`} />
+          </Button>
+        </Link>
       </motion.section>
     </div>
   );
