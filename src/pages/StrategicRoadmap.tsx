@@ -7,7 +7,6 @@ import { useI18n } from "@/i18n/I18nContext";
 import { CommandTopBar } from "@/components/medad/CommandTopBar";
 import type { SectionKey } from "@/components/medad/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { useEffect } from "react";
 import {
   Award,
   Briefcase,
@@ -129,14 +128,9 @@ const CERTIFICATIONS = [
 
 export const StrategicRoadmap = () => {
   const { activities } = useStudentActivities();
-  const { t, lang, setLang } = useI18n();
+  const { t, lang, dir } = useI18n();
   const navigate = useNavigate();
-  useEffect(() => {
-    if (lang !== "ar") setLang("ar");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   const isAr = lang === "ar";
-  const dir = isAr ? "rtl" : "ltr";
   const distinction = calculateDistinction(activities);
   const readiness = Math.min(100, Math.round((distinction.percentage + 78) / 2));
 
