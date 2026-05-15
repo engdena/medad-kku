@@ -25,8 +25,8 @@ export const PORTFOLIO_CATEGORY_POINTS: Record<PortfolioCategory, number> = {
   innovation: 15,
   certification: 10,
   leadership: 10,
+  technical: 10,
   volunteering: 5,
-  technical: 5,
   skill: 5,
 };
 
