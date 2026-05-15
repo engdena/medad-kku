@@ -372,6 +372,7 @@ export const StrategicRoadmap = () => {
         </section>
       </main>
     </div>
+    </SidebarProvider>
   );
 };
 
