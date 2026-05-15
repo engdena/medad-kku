@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { Languages, Accessibility, Sun, Moon, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
+import type { SectionKey } from "@/components/medad/AppSidebar";
+import { LayoutDashboard, Trophy, Map, MessagesSquare, Settings } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -17,7 +20,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { student } from "@/data/mockData";
 
-export const CommandTopBar = () => {
+type Props = {
+  active?: SectionKey;
+  onSelect?: (s: SectionKey) => void;
+};
+
+export const CommandTopBar = ({ active, onSelect }: Props = {}) => {
   const { t, lang, toggleLang } = useI18n();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
@@ -41,7 +49,8 @@ export const CommandTopBar = () => {
 
   return (
     <header className="sticky top-0 z-30 h-14 flex items-center gap-2 px-3 lg:px-5 border-b border-border/60 bg-background/60 backdrop-blur-xl">
-      <SidebarTrigger className="rounded-xl" />
+      <SidebarTrigger className="rounded-xl md:hidden" />
+      {active && onSelect && <TopNavTabs active={active} onSelect={onSelect} ar={ar} />}
       <div className="ms-auto flex items-center gap-1.5">
         <Button
           variant="ghost"
@@ -103,5 +112,49 @@ export const CommandTopBar = () => {
       </div>
       <AccessibilityPanel open={a11yOpen} onOpenChange={setA11yOpen} />
     </header>
+  );
+};
+
+const TopNavTabs = ({
+  active,
+  onSelect,
+  ar,
+}: {
+  active: SectionKey;
+  onSelect: (s: SectionKey) => void;
+  ar: boolean;
+}) => {
+  const L = (en: string, arS: string) => (ar ? arS : en);
+  const items: Array<{ key: SectionKey; label: string; Icon: typeof LayoutDashboard }> = [
+    { key: "dashboard", label: L("Dashboard", "لوحة القيادة"), Icon: LayoutDashboard },
+    { key: "portfolio", label: L("Portfolio", "الملف"), Icon: Trophy },
+    { key: "roadmap", label: L("Roadmap", "الخارطة"), Icon: Map },
+    { key: "mentor", label: L("Mentor", "الإرشاد"), Icon: MessagesSquare },
+    { key: "settings", label: L("Settings", "الإعدادات"), Icon: Settings },
+  ];
+  return (
+    <nav className="hidden md:flex items-center gap-1 ms-2">
+      {items.map(({ key, label, Icon }) => {
+        const isActive = active === key;
+        return (
+          <button
+            key={key}
+            onClick={() => onSelect(key)}
+            className={cn(
+              "relative inline-flex items-center gap-1.5 px-3 h-9 rounded-xl text-sm font-medium transition-all",
+              isActive
+                ? "text-foreground bg-primary/10"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/60",
+            )}
+          >
+            <Icon className="w-4 h-4" />
+            <span>{label}</span>
+            {isActive && (
+              <span className="absolute left-2 right-2 -bottom-[9px] h-0.5 rounded-full bg-gradient-primary" />
+            )}
+          </button>
+        );
+      })}
+    </nav>
   );
 };

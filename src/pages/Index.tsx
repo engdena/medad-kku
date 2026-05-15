@@ -20,6 +20,7 @@ import { InsightWidgets } from "@/components/medad/InsightWidgets";
 import { useI18n } from "@/i18n/I18nContext";
 import { useStudentData } from "@/hooks/useStudentData";
 import { useAuth } from "@/hooks/useAuth";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { student } from "@/data/mockData";
 import { TrendingUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,6 +30,7 @@ const Index = () => {
   const [section, setSection] = useState<SectionKey>("dashboard");
   const { user } = useAuth();
   const { data } = useStudentData(user?.id);
+  const isMobile = useIsMobile();
   const { t, lang } = useI18n();
   const navigate = useNavigate();
   const ar = lang === "ar";
@@ -49,10 +51,10 @@ const Index = () => {
           <div className="absolute bottom-0 -right-24 w-[30rem] h-[30rem] rounded-full bg-accent/10 blur-3xl" />
         </div>
 
-        <AppSidebar active={section} onSelect={setSection} />
+        {isMobile && <AppSidebar active={section} onSelect={setSection} />}
 
         <SidebarInset className="bg-transparent">
-          <CommandTopBar />
+          <CommandTopBar active={section} onSelect={setSection} />
 
           <div className="flex-1 w-full max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-6 md:py-10 transition-all duration-300">
             <AnimatePresence mode="wait">
