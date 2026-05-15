@@ -1,45 +1,31 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { calculateDistinction, recommendedSkills, industryProjects } from "@/data/mockData";
+import {
+  calculateDistinction,
+  recommendedSkills,
+  industryProjects,
+} from "@/data/mockData";
 import { useStudentActivities } from "@/hooks/useStudentActivities";
 import { useI18n } from "@/i18n/I18nContext";
 import {
   ArrowLeft,
   Award,
   Briefcase,
-  Factory,
-  Lightbulb,
+  Building2,
+  Calendar,
+  MapPin,
   Network,
   Sparkles,
   Target,
-  TrendingUp,
   Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-const PHASES = [
-  {
-    id: 1,
-    key: "foundations",
-    title: "Strategic Foundations",
-    sub: "Skill acquisition & certifications",
-    icon: Zap,
-  },
-  {
-    id: 2,
-    key: "distinction",
-    title: "Professional Distinction",
-    sub: "Research, leadership & specialization",
-    icon: Award,
-  },
-  {
-    id: 3,
-    key: "integration",
-    title: "Industry Integration",
-    sub: "Sponsored projects & corporate alignment",
-    icon: Briefcase,
-  },
+const STEPS = [
+  { id: 1, title: "Foundations", icon: Zap, points: "+5" },
+  { id: 2, title: "Specialization", icon: Award, points: "+10" },
+  { id: 3, title: "Industry Impact", icon: Briefcase, points: "+15" },
 ] as const;
 
 export const StrategicRoadmap = () => {
@@ -48,12 +34,12 @@ export const StrategicRoadmap = () => {
   const distinction = calculateDistinction(activities);
   const readiness = Math.min(100, Math.round((distinction.percentage + 78) / 2));
 
-  const skillsPhase1 = recommendedSkills.slice(0, 2);
-  const skillsPhase2 = recommendedSkills.slice(2, 4);
+  // Determine current step from readiness
+  const currentStep = readiness < 40 ? 1 : readiness < 75 ? 2 : 3;
 
   return (
     <div className="min-h-screen bg-gradient-subtle">
-      <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-8 space-y-5">
+      <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 md:py-8 space-y-6">
         {/* Top bar */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <Link to="/">
@@ -66,25 +52,19 @@ export const StrategicRoadmap = () => {
           </div>
         </div>
 
-        {/* Compact header: title + readiness + smart insight in one row */}
+        {/* Header + readiness */}
         <motion.section
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid lg:grid-cols-[1.4fr_1fr_1fr] gap-3"
+          className="rounded-3xl glass p-5 shadow-soft flex items-center justify-between gap-4 flex-wrap"
         >
-          <div className="rounded-3xl glass p-4 shadow-soft flex items-center gap-3">
-            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/20">
-              <Factory className="h-5 w-5" />
-            </div>
-            <div className="min-w-0">
-              <h1 className="font-display text-xl md:text-2xl font-bold tracking-tight leading-tight">
-                {t.roadmap.title}
-              </h1>
-              <p className="text-xs text-muted-foreground line-clamp-2">{t.roadmap.sub}</p>
-            </div>
+          <div>
+            <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight leading-tight">
+              {t.roadmap.title}
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1 max-w-xl">{t.roadmap.sub}</p>
           </div>
-
-          <div className="rounded-3xl glass p-4 shadow-soft">
+          <div className="min-w-[220px]">
             <div className="flex items-center justify-between text-xs font-bold">
               <span className="inline-flex items-center gap-1.5 uppercase tracking-widest text-muted-foreground">
                 <Target className="w-3.5 h-3.5 text-primary" /> {t.roadmap.readiness}
@@ -92,74 +72,160 @@ export const StrategicRoadmap = () => {
               <span className="text-primary text-base">{readiness}%</span>
             </div>
             <Progress value={readiness} className="mt-2 h-2" />
-            <div className="mt-1.5 text-[11px] text-muted-foreground">
-              {t.roadmap.gap}: {100 - readiness}%
-            </div>
-          </div>
-
-          <div className="rounded-3xl glass p-4 shadow-soft border border-accent/30">
-            <div className="flex items-start gap-2">
-              <Lightbulb className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-              <div>
-                <div className="text-[10px] uppercase tracking-widest text-accent font-bold">
-                  Smart Career Insight
-                </div>
-                <p className="text-xs font-medium text-foreground mt-1 line-clamp-3">
-                  {t.roadmap.smartTip}
-                </p>
-              </div>
-            </div>
           </div>
         </motion.section>
 
-        {/* Skill Path indicator */}
-        <div className="flex items-center justify-center">
-          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-2xl glass shadow-soft text-xs font-bold text-primary">
-            <Sparkles className="w-3.5 h-3.5" /> Skill Path
+        {/* Horizontal Stepper */}
+        <section className="rounded-3xl glass p-6 shadow-soft">
+          <div className="relative">
+            {/* progress line */}
+            <div className="absolute top-7 left-[10%] right-[10%] h-1 bg-border rounded-full" />
+            <div
+              className="absolute top-7 left-[10%] h-1 bg-gradient-to-r from-primary to-accent rounded-full transition-all"
+              style={{ width: `${((currentStep - 1) / (STEPS.length - 1)) * 80}%` }}
+            />
+            <div className="grid grid-cols-3 relative">
+              {STEPS.map((s, i) => {
+                const Icon = s.icon;
+                const active = s.id <= currentStep;
+                return (
+                  <motion.div
+                    key={s.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.08 }}
+                    className="flex flex-col items-center text-center gap-2"
+                  >
+                    <div
+                      className={`relative z-10 grid h-14 w-14 place-items-center rounded-2xl ring-4 ring-background shadow-elegant transition-colors ${
+                        active
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-card text-muted-foreground border border-border"
+                      }`}
+                    >
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <div className="font-display font-bold text-sm md:text-base">{s.title}</div>
+                    <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                      {s.points} pts
+                    </span>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* Success path connector + 3 phases */}
-        <section className="relative">
-          {/* horizontal success line */}
-          <div className="hidden lg:block absolute top-7 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-primary/30 via-primary to-accent/60 rounded-full" />
-          <div className="grid lg:grid-cols-3 gap-4">
-            {PHASES.map((phase, idx) => {
-              const Icon = phase.icon;
+        {/* Industry Opportunities — horizontal */}
+        <section className="space-y-3">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-primary font-semibold">
+                <Briefcase className="w-3.5 h-3.5" /> Industry Opportunities
+              </div>
+              <h2 className="font-display font-bold text-xl md:text-2xl mt-1">
+                Sponsored projects · {industryProjects.length} live
+              </h2>
+            </div>
+            <span className="text-[10px] font-bold text-accent bg-accent/10 px-2 py-1 rounded-full">
+              +15 pts on completion
+            </span>
+          </div>
+
+          <div className="overflow-x-auto -mx-4 px-4 pb-2 scrollbar-thin">
+            <div className="flex gap-4 min-w-max">
+              {industryProjects.map((p, idx) => {
+                const company = lang === "ar" ? p.companyAr : p.company;
+                const sector = lang === "ar" ? p.sectorAr : p.sector;
+                const title = lang === "ar" ? p.titleAr : p.title;
+                const location = lang === "ar" ? p.locationAr : p.location;
+                const deadline = lang === "ar" ? p.deadlineAr : p.deadline;
+                return (
+                  <motion.article
+                    key={p.title}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.06 }}
+                    className="w-[280px] shrink-0 rounded-3xl glass p-4 shadow-soft border border-border/70 flex flex-col"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="grid h-10 w-10 place-items-center rounded-xl bg-card border border-border text-primary shrink-0">
+                        <Building2 className="w-5 h-5" />
+                      </div>
+                      <span className="inline-flex items-center text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded-full ring-1 ring-primary/20">
+                        {p.match}% Match
+                      </span>
+                    </div>
+                    <div className="mt-3">
+                      <div className="font-bold text-sm text-foreground leading-snug">{company}</div>
+                      <div className="text-[11px] text-muted-foreground">{sector}</div>
+                    </div>
+                    <h3 className="font-display font-bold text-sm leading-tight mt-2 line-clamp-2">
+                      {title}
+                    </h3>
+                    <div className="mt-3 space-y-1 text-[11px] text-muted-foreground">
+                      <div className="flex items-center gap-1.5">
+                        <MapPin className="w-3 h-3" /> {location}
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-3 h-3" /> {deadline}
+                      </div>
+                    </div>
+                    <Button
+                      size="sm"
+                      className="mt-4 w-full rounded-2xl bg-gradient-primary text-primary-foreground hover:opacity-95"
+                    >
+                      Apply
+                    </Button>
+                  </motion.article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Recommended Skill Actions with point labels */}
+        <section className="space-y-3">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-primary font-semibold">
+              <Sparkles className="w-3.5 h-3.5" /> Recommended Actions
+            </div>
+            <h2 className="font-display font-bold text-xl md:text-2xl mt-1">
+              Boost your Distinction Index
+            </h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {recommendedSkills.slice(0, 4).map((s, idx) => {
+              const title = lang === "ar" ? s.titleAr : s.title;
+              const provider = lang === "ar" ? s.providerAr : s.provider;
+              // Heuristic: top match → research(+15), then certification(+10), else hard skill(+5)
+              const pts = idx === 0 ? "+15" : idx < 3 ? "+10" : "+5";
+              const ptsLabel =
+                idx === 0 ? "Research" : idx < 3 ? "Certification" : "Hard Skill";
               return (
                 <motion.div
-                  key={phase.id}
-                  initial={{ opacity: 0, y: 14 }}
+                  key={s.title}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.08 }}
-                  className="rounded-3xl glass shadow-soft p-4 flex flex-col"
+                  transition={{ delay: idx * 0.05 }}
+                  className="rounded-2xl glass p-4 shadow-soft flex flex-col"
                 >
-                  {/* phase header with marker */}
-                  <div className="flex items-center gap-3 relative">
-                    <div className="relative z-10 grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-elegant ring-4 ring-background">
-                      <Icon className="w-5 h-5" />
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                      {provider}
                     </div>
-                    <div>
-                      <div className="text-[10px] uppercase tracking-widest text-primary font-bold">
-                        Phase {phase.id}
-                      </div>
-                      <div className="font-display font-bold text-base leading-tight">
-                        {phase.title}
-                      </div>
-                      <div className="text-[11px] text-muted-foreground">{phase.sub}</div>
-                    </div>
+                    <span className="text-[10px] font-bold text-accent bg-accent/10 px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                      {pts} · {ptsLabel}
+                    </span>
                   </div>
-
-                  {/* phase content */}
-                  <div className="mt-4 space-y-2 flex-1">
-                    {phase.id === 1 &&
-                      skillsPhase1.map((s) => <CompactSkillCard key={s.title} skill={s} lang={lang} />)}
-                    {phase.id === 2 &&
-                      skillsPhase2.map((s) => <CompactSkillCard key={s.title} skill={s} lang={lang} />)}
-                    {phase.id === 3 && (
-                      <ProjectList projects={industryProjects} lang={lang} />
-                    )}
-                  </div>
+                  <div className="font-display font-bold text-sm mt-1 leading-tight">{title}</div>
+                  <div className="mt-2 text-[11px] text-primary font-bold">{s.match}% Match</div>
+                  <Button
+                    size="sm"
+                    className="mt-3 w-full rounded-xl text-[11px] bg-gradient-primary text-primary-foreground"
+                  >
+                    Quick Enroll
+                  </Button>
                 </motion.div>
               );
             })}
@@ -169,69 +235,5 @@ export const StrategicRoadmap = () => {
     </div>
   );
 };
-
-const CompactSkillCard = ({
-  skill,
-  lang,
-}: {
-  skill: (typeof recommendedSkills)[number];
-  lang: string;
-}) => {
-  const title = lang === "ar" ? skill.titleAr : skill.title;
-  return (
-    <div className="rounded-2xl bg-card/70 border border-border p-3 backdrop-blur">
-      <div className="flex items-start justify-between gap-2">
-        <div className="font-display font-bold text-sm leading-tight">{title}</div>
-        <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full whitespace-nowrap">
-          {skill.match}%
-        </span>
-      </div>
-      <Button
-        size="sm"
-        className="mt-2 w-full h-7 rounded-xl text-[11px] bg-gradient-primary text-primary-foreground"
-      >
-        Quick Enroll
-      </Button>
-    </div>
-  );
-};
-
-const ProjectList = ({
-  projects,
-  lang,
-  expanded = false,
-}: {
-  projects: typeof industryProjects;
-  lang: string;
-  expanded?: boolean;
-}) => (
-  <ul className="space-y-1.5">
-    {projects.map((p) => {
-      const company = lang === "ar" ? p.companyAr : p.company;
-      const sector = lang === "ar" ? p.sectorAr : p.sector;
-      return (
-        <li
-          key={p.company}
-          className="flex items-center justify-between gap-2 rounded-xl bg-card/70 border border-border px-3 py-2"
-        >
-          <div className="min-w-0">
-            <div className="font-bold text-xs truncate">{company}</div>
-            <div className="text-[10px] text-muted-foreground truncate">{sector}</div>
-          </div>
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-primary">
-              <TrendingUp className="w-3 h-3" /> {p.match}%
-            </span>
-            {expanded && (
-              <Button size="sm" className="h-6 px-2 rounded-lg text-[10px]">
-                Apply
-              </Button>
-            )}
-          </div>
-        </li>
-      );
-    })}
-  </ul>
-);
 
 export default StrategicRoadmap;
