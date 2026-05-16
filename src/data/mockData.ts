@@ -7,7 +7,7 @@ export const student = {
   college: "College of Engineering",
   collegeAr: "كلية الهندسة",
   level: "Level 7 of 8",
-  gpa: 3.42,
+  gpa: 4.87,
   gpaScale: 5.0,
   attendance: 91,
   riskScore: 38, // 0-100, lower = safer
