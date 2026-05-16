@@ -268,4 +268,27 @@ const SectionHeader = ({ title, sub }: { title: string; sub: string }) => (
   </div>
 );
 
+const SettingRow = ({
+  icon,
+  title,
+  desc,
+  checked,
+  onChange,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+  checked: boolean;
+  onChange: () => void;
+}) => (
+  <div className="flex items-start gap-3 p-4 rounded-2xl border border-border/60 bg-card/60">
+    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary grid place-items-center shrink-0">{icon}</div>
+    <div className="flex-1">
+      <div className="font-semibold">{title}</div>
+      <div className="text-sm text-muted-foreground">{desc}</div>
+    </div>
+    <Switch checked={checked} onCheckedChange={onChange} />
+  </div>
+);
+
 export default Index;
