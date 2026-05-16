@@ -90,15 +90,6 @@ export const InsightWidgets = ({ onOpenRoadmap }: Props) => {
           </span>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onOpenRoadmap}
-          className="rounded-xl w-full mt-4 justify-center"
-        >
-          {L("Open full roadmap", "افتح الخارطة الكاملة")}
-          <ArrowRight className={`w-4 h-4 ms-1 ${ar ? "flip-rtl" : ""}`} />
-        </Button>
       </motion.section>
 
       <motion.section
