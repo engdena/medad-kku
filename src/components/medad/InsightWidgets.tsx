@@ -14,6 +14,7 @@ import {
 type Props = { onOpenRoadmap: () => void };
 
 export const InsightWidgets = ({ onOpenRoadmap }: Props) => {
+  void onOpenRoadmap;
   const { lang } = useI18n();
   const ar = lang === "ar";
   const L = (en: string, arS: string) => (ar ? arS : en);
