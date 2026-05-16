@@ -43,7 +43,7 @@ export const HeroDashboard = () => {
             transition={{ duration: 0.6, delay: 0.28 }}
             className="mt-3 text-base md:text-lg text-primary-foreground/85 max-w-xl"
           >
-            {t.hero.summary("3.58")}
+            {t.hero.summary("4.87")}
           </motion.p>
 
           <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl">
