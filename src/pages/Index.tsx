@@ -18,7 +18,10 @@ import { useStudentData } from "@/hooks/useStudentData";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { student } from "@/data/mockData";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, Languages, Sun, Moon, Eye, Volume2, Type } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { useAccessibility } from "@/contexts/AccessibilityContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Index = () => {
@@ -27,7 +30,21 @@ const Index = () => {
   const { user } = useAuth();
   const { data } = useStudentData(user?.id);
   const isMobile = useIsMobile();
-  const { t, lang } = useI18n();
+  const { t, lang, setLang } = useI18n();
+  const [dark, setDark] = useState(() =>
+    typeof document !== "undefined" && document.documentElement.classList.contains("dark")
+  );
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
+  const {
+    highContrast,
+    toggleHighContrast,
+    ttsEnabled,
+    toggleTts,
+    largeText,
+    toggleLargeText,
+  } = useAccessibility();
   const navigate = useNavigate();
   const location = useLocation();
   const ar = lang === "ar";
@@ -148,15 +165,83 @@ const Index = () => {
                     <SectionHeader
                       title={L("Settings", "الإعدادات")}
                       sub={L(
-                        "Manage your account, language, and accessibility preferences from the top bar.",
-                        "إدارة الحساب واللغة وخيارات الوصول من شريط القيادة في الأعلى."
+                        "Manage your language, theme, and accessibility preferences.",
+                        "إدارة اللغة والمظهر وخيارات إمكانية الوصول."
                       )}
                     />
-                    <div className="rounded-3xl bg-card border border-border p-8 text-center text-sm text-muted-foreground">
-                      {L(
-                        "Additional settings will appear here as new modules launch.",
-                        "ستظهر إعدادات إضافية هنا مع إطلاق الوحدات الجديدة."
-                      )}
+
+                    <div className="rounded-3xl bg-card border border-border p-6 shadow-soft space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary grid place-items-center">
+                          <Languages className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-semibold">{L("Language", "اللغة")}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {L("Choose your interface language.", "اختر لغة الواجهة.")}
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant={lang === "en" ? "default" : "outline"}
+                            className="rounded-xl"
+                            onClick={() => setLang("en")}
+                          >
+                            English
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant={lang === "ar" ? "default" : "outline"}
+                            className="rounded-xl"
+                            onClick={() => setLang("ar")}
+                          >
+                            العربية
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="rounded-3xl bg-card border border-border p-6 shadow-soft">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary grid place-items-center">
+                          {dark ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-semibold">{L("Dark mode", "الوضع الداكن")}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {L("Switch between light and dark themes.", "التبديل بين الوضع الفاتح والداكن.")}
+                          </div>
+                        </div>
+                        <Switch checked={dark} onCheckedChange={setDark} />
+                      </div>
+                    </div>
+
+                    <div className="rounded-3xl bg-card border border-border p-6 shadow-soft space-y-4">
+                      <div className="font-display font-bold text-lg">
+                        {L("Accessibility", "إمكانية الوصول")}
+                      </div>
+                      <SettingRow
+                        icon={<Eye className="w-5 h-5" />}
+                        title={t.a11y.hc.t}
+                        desc={t.a11y.hc.d}
+                        checked={highContrast}
+                        onChange={toggleHighContrast}
+                      />
+                      <SettingRow
+                        icon={<Volume2 className="w-5 h-5" />}
+                        title={t.a11y.tts.t}
+                        desc={t.a11y.tts.d}
+                        checked={ttsEnabled}
+                        onChange={toggleTts}
+                      />
+                      <SettingRow
+                        icon={<Type className="w-5 h-5" />}
+                        title={t.a11y.large.t}
+                        desc={t.a11y.large.d}
+                        checked={largeText}
+                        onChange={toggleLargeText}
+                      />
                     </div>
                   </div>
                 )}
@@ -180,6 +265,29 @@ const SectionHeader = ({ title, sub }: { title: string; sub: string }) => (
   <div>
     <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight">{title}</h1>
     <p className="mt-1 text-sm md:text-base text-muted-foreground max-w-2xl">{sub}</p>
+  </div>
+);
+
+const SettingRow = ({
+  icon,
+  title,
+  desc,
+  checked,
+  onChange,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+  checked: boolean;
+  onChange: () => void;
+}) => (
+  <div className="flex items-start gap-3 p-4 rounded-2xl border border-border/60 bg-card/60">
+    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary grid place-items-center shrink-0">{icon}</div>
+    <div className="flex-1">
+      <div className="font-semibold">{title}</div>
+      <div className="text-sm text-muted-foreground">{desc}</div>
+    </div>
+    <Switch checked={checked} onCheckedChange={onChange} />
   </div>
 );
 
