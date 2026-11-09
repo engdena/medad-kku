@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sparkles, Send, Loader2, Bot, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { student, courses } from "@/data/mockData";
+import { student } from "@/data/mockData";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { useI18n } from "@/i18n/I18nContext";
 import { AnimatePresence, motion } from "framer-motion";
@@ -11,21 +13,16 @@ import type { StudentPerformanceRecord } from "@/lib/studentPerformance";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const buildSystem = (lang: "en" | "ar", focus?: StudentPerformanceRecord | null) => `You are Medad AI Consultant for King Khalid University. Be concise, warm, strategic.
-Student: ${student.name} (${student.arabicName}), ${student.major}, GPA ${student.gpa}/${student.gpaScale}, risk ${student.riskScore}/100 (${student.riskBand}).
-Courses: ${courses.map(c => `${c.name}(${c.grade},risk:${c.risk})`).join(", ")}.
-Use the grade scale A+, A, B+, B, C+, C, D+, D, F when discussing grades.
-Anchor advice to Industrial Engineering, operational excellence, supply chain optimization, reliability engineering, MBB-style consulting, Saudi Vision 2030, and the Saudi labor market. Use markdown.
-${focus ? `\nFOCUS STUDENT (the stakeholder is currently reviewing this profile — tailor every answer to them, name their skill gaps, and propose specific next actions):
-- Name: ${focus.name} (${focus.nameAr})
-- Track: ${focus.title}
-- GPA: ${focus.gpa.toFixed(2)} / 5.0
-- Self-learning hours: ${focus.selfLearningHours}
-- Market readiness: ${focus.marketReadiness}%
-- Technical skills: ${focus.technicalSkills.join(", ")}
-- Soft skills: ${focus.softSkills.join(", ")}
-- Status: ${focus.gpa < 3.75 || focus.marketReadiness < 70 ? "AT RISK — prioritize a remediation plan" : "HIGH POTENTIAL — propose stretch opportunities"}` : ""}
-IMPORTANT: Reply ONLY in ${lang === "ar" ? "Arabic (العربية)" : "English"}.`;
+const buildFocus = (f: StudentPerformanceRecord) => [
+  `Name: ${f.name} (${f.nameAr})`,
+  `Track: ${f.title}`,
+  `GPA: ${f.gpa.toFixed(2)} / 5.0`,
+  `Self-learning hours: ${f.selfLearningHours}`,
+  `Market readiness: ${f.marketReadiness}%`,
+  `Technical skills: ${f.technicalSkills.join(", ")}`,
+  `Soft skills: ${f.softSkills.join(", ")}`,
+  `Status: ${f.gpa < 3.75 || f.marketReadiness < 70 ? "At risk" : "High potential"}`,
+].join("\n");
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-consultant`;
 
@@ -39,6 +36,7 @@ export const AIConsultant = ({
   focusStudent?: StudentPerformanceRecord | null;
 }) => {
   const { t, lang } = useI18n();
+  const { isDemo } = useAuth();
   const firstName = focusStudent
     ? (lang === "ar" ? focusStudent.nameAr.split(" ")[0] : focusStudent.name.split(" ")[0])
     : (lang === "ar" ? student.arabicName.split(" ")[0] : student.name.split(" ")[0]);
@@ -60,20 +58,34 @@ export const AIConsultant = ({
   }, [messages, loading]);
 
   const send = async (text: string) => {
-    const userMsg: Msg = { role: "user", content: text };
-    const next = [...messages, userMsg];
-    setMessages(next);
-    setInput("");
     setLoading(true);
     try {
+      let accessToken: string = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      if (!isDemo) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) {
+          toast.error(lang === "ar" ? "سجّل الدخول لاستخدام المستشار الذكي." : "Please sign in to use the AI Consultant.");
+          return;
+        }
+        accessToken = session.access_token;
+      }
+
+      const userMsg: Msg = { role: "user", content: text };
+      const next = [...messages, userMsg];
+      setMessages(next);
+      setInput("");
+
       const resp = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          messages: [{ role: "system", content: buildSystem(lang, focusStudent) }, ...next.map(m => ({ role: m.role, content: m.content }))],
+          lang,
+          messages: next.map(m => ({ role: m.role, content: m.content })),
+          ...(isDemo ? { demo: true } : {}),
+          ...(focusStudent ? { focus: buildFocus(focusStudent) } : {}),
         }),
       });
       if (resp.status === 429) { toast.error("Rate limit reached. Please try again shortly."); setLoading(false); return; }

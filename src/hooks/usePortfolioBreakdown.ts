@@ -40,10 +40,10 @@ export const dispatchPortfolioChanged = () => {
 };
 
 export const usePortfolioBreakdown = () => {
-  const { user } = useAuth();
+  const { user, isDemo: isDemoSession } = useAuth();
   const [entries, setEntries] = useState<PortfolioEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const isDemo = !user;
+  const isDemo = !user || isDemoSession;
 
   const load = useCallback(async () => {
     setLoading(true);

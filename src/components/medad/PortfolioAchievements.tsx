@@ -12,6 +12,7 @@ import { Award, ExternalLink, Lightbulb, Pencil, Plus, Sparkles, Trash2, Trophy 
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { dispatchPortfolioChanged } from "@/hooks/usePortfolioBreakdown";
+import { isHttpUrl } from "@/lib/utils";
 
 type EntryType = "skill" | "achievement";
 type Category = "innovation" | "certification" | "leadership" | "technical" | "volunteering";
@@ -46,7 +47,7 @@ type Draft = { title: string; category: Category; evidence_url: string; descript
 const blankDraft: Draft = { title: "", category: "innovation", evidence_url: "", description: "" };
 
 export const PortfolioAchievements = () => {
-  const { user } = useAuth();
+  const { user, isDemo: isDemoSession } = useAuth();
   const { lang } = useI18n();
   const ar = lang === "ar";
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -54,7 +55,7 @@ export const PortfolioAchievements = () => {
   const [draft, setDraft] = useState<Draft>(blankDraft);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const isDemo = !user;
+  const isDemo = !user || isDemoSession;
 
   const L = (en: string, arS: string) => (ar ? arS : en);
 
@@ -106,12 +107,17 @@ export const PortfolioAchievements = () => {
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (!draft.title.trim()) return;
+    const evidenceUrl = draft.evidence_url.trim();
+    if (evidenceUrl && !isHttpUrl(evidenceUrl)) {
+      toast.error(L("Evidence link must start with http:// or https://", "يجب أن يبدأ رابط الإثبات بـ http:// أو https://"));
+      return;
+    }
     if (isDemo) {
       const now = new Date().toISOString();
       if (editingId) {
         const next = entries.map((it) =>
           it.id === editingId
-            ? { ...it, ...draft, entry_type: entryTypeFor(draft.category) } as Entry
+            ? { ...it, ...draft, evidence_url: evidenceUrl || null, entry_type: entryTypeFor(draft.category) } as Entry
             : it
         );
         setEntries(next); persistDemo(next);
@@ -122,7 +128,7 @@ export const PortfolioAchievements = () => {
           entry_type: entryTypeFor(draft.category),
           title: draft.title.trim(),
           category: draft.category,
-          evidence_url: draft.evidence_url || null,
+          evidence_url: evidenceUrl || null,
           description: draft.description || null,
           created_at: now,
         };
@@ -141,7 +147,7 @@ export const PortfolioAchievements = () => {
           entry_type: entryTypeFor(draft.category),
           title: draft.title.trim(),
           category: draft.category,
-          evidence_url: draft.evidence_url || null,
+          evidence_url: evidenceUrl || null,
           description: draft.description || null,
         })
         .eq("id", editingId);
@@ -152,7 +158,7 @@ export const PortfolioAchievements = () => {
         entry_type: entryTypeFor(draft.category),
         title: draft.title.trim(),
         category: draft.category,
-        evidence_url: draft.evidence_url || null,
+        evidence_url: evidenceUrl || null,
         description: draft.description || null,
       });
       if (error) return toast.error(error.message);
@@ -334,7 +340,7 @@ export const PortfolioAchievements = () => {
                   {entry.description && (
                     <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{entry.description}</p>
                   )}
-                  {entry.evidence_url && (
+                  {entry.evidence_url && isHttpUrl(entry.evidence_url) && (
                     <a
                       href={entry.evidence_url}
                       target="_blank"

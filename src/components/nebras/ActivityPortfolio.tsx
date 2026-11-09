@@ -1,12 +1,14 @@
 import { FormEvent, useState, type Dispatch, type SetStateAction } from "react";
 import { activityCategoryPoints, type ActivityCategory, type StudentActivity } from "@/data/mockData";
 import { useI18n } from "@/i18n/I18nContext";
+import { isHttpUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Award, Calendar, ExternalLink, FilePlus2, Pencil, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 type Draft = Omit<StudentActivity, "id" | "titleAr" | "descriptionAr">;
 
@@ -26,8 +28,14 @@ export const ActivityPortfolio = ({
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
+    const evidence = draft.evidence.trim();
+    if (evidence && !isHttpUrl(evidence)) {
+      toast.error(lang === "ar" ? "يجب أن يبدأ رابط الإثبات بـ http:// أو https://" : "Evidence link must start with http:// or https://");
+      return;
+    }
     const payload = {
       ...draft,
+      evidence,
       titleAr: draft.title,
       descriptionAr: draft.description,
       date: draft.date || new Date().toISOString().slice(0, 10),
@@ -109,7 +117,7 @@ export const ActivityPortfolio = ({
                 <Button type="button" variant="ghost" size="icon" className="rounded-xl text-danger hover:text-danger" onClick={() => setActivities((items) => items.filter((item) => item.id !== activity.id))} aria-label={t.portfolio.delete}><Trash2 className="w-4 h-4" /></Button>
               </div>
             </div>
-            {activity.evidence && <a href={activity.evidence} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"><ExternalLink className="w-3 h-3" /> {t.portfolio.evidenceShort}</a>}
+            {activity.evidence && isHttpUrl(activity.evidence) && <a href={activity.evidence} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"><ExternalLink className="w-3 h-3" /> {t.portfolio.evidenceShort}</a>}
           </motion.article>
         ))}
       </div>

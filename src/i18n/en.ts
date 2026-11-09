@@ -66,7 +66,7 @@ export const en = {
     placeholders: {
       title: "Professional certification, paper, competition…",
       description: "Briefly describe your role, impact, and outcome.",
-      evidence: "https:// or attachment reference",
+      evidence: "https://",
     },
     empty: "No student-added activities yet.",
   },

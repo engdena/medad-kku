@@ -68,7 +68,7 @@ export const ar: Dict = {
     placeholders: {
       title: "شهادة مهنية، ورقة بحثية، مسابقة…",
       description: "صف دورك وأثرك والنتيجة باختصار.",
-      evidence: "https:// أو مرجع المرفق",
+      evidence: "https://",
     },
     empty: "لا توجد أنشطة مضافة من الطالب بعد.",
   },
